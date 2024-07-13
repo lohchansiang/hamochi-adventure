@@ -16,9 +16,15 @@ export default class GameManager{
     cardKey3: string
     //
     battleSlotNumber: number
+    isEnd: boolean
 
     constructor(scene:Scene){
         this.scene = scene
+
+        this.cardKey1 = ''
+        this.cardKey2 = ''
+        this.cardKey3 = ''
+        this.isEnd = false
     }
 
     heal(){
@@ -70,12 +76,18 @@ export default class GameManager{
     }
 
     generateCardKeys(){
-        let keys: string[] = ['chest','heal','battle']
-        keys = GameLib.shuffle(keys)
+        if( this.currentStep == this.maxStep ){
+            this.cardKey1 = ''
+            this.cardKey2 = 'end'
+            this.cardKey3 = ''
+        }else{
+            let keys: string[] = ['chest','heal','battle','rock']
+            keys = GameLib.shuffle(keys)
 
-        this.cardKey1 = keys[0]
-        this.cardKey2 = keys[1]
-        this.cardKey3 = keys[2]
+            this.cardKey1 = keys[0]
+            this.cardKey2 = keys[1]
+            this.cardKey3 = keys[2]
+        }
     }
 
     getCardKey( slotNumber: number):string{
@@ -152,7 +164,10 @@ export default class GameManager{
             status = 'lose';
         }
 
-        if( this.currentStep == this.maxStep ){
+        // if( this.currentStep == this.maxStep ){
+        //     status = 'win';
+        // }
+        if( this.isEnd ){
             status = 'win';
         }
 
@@ -164,5 +179,11 @@ export default class GameManager{
             this.battleSlotNumber = slotNumber
             this.scene.events.emit('start-battle')
         }   
+    }
+
+    setEnd(){
+        this.isEnd = true;
+
+        this.scene.events.emit('player-update');
     }
 }

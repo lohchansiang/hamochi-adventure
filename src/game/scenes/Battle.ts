@@ -10,6 +10,7 @@ import HealthBar from '../components/HealthBar';
 import ModalSimpleMessage from '../modals/ModalSimpleMessage';
 import Match from '../components/Match';
 import PlayerAttackBar from '../components/PlayerAttackBar';
+import ModalQuestion from '../modals/ModalQuestion';
 
 export class Battle extends Scene
 {
@@ -27,6 +28,10 @@ export class Battle extends Scene
     //
     match: Match
     isDone: boolean
+    //
+    modalQuestion: ModalQuestion
+    //
+    centerMessage: GameObjects.Text
 
     constructor ()
     {
@@ -38,11 +43,28 @@ export class Battle extends Scene
         // Reset Data
         this.isDone = false
 
+        this.modalQuestion = new ModalQuestion(this,'ModalQuestion');
+        this.modalQuestion.callbackCorrect = ()=>{
+            console.log('callbackCorrect')
+            this.playerAttack(true)
+        }
+        this.modalQuestion.callbackWrong = ()=>{
+            console.log('callbackWrong')
+            this.playerAttack(false)
+        }
+
         this.camera = this.cameras.main
         this.camera.setBackgroundColor(0xe6e6e6);
 
         this.gameManager = new GameManager(this);
         this.gameManager.loadData()
+
+        // Render Center Message
+        this.centerMessage = this.add.text(GameLib.screenWidth/2, GameLib.screenHeight/2 -150,'',{
+            font: 'bold 60px Arial',
+            color: '#00000',
+            align: 'center',  // 'left'|'center'|'right'|'justify'
+        },).setOrigin(0.5).setVisible(false)
 
         // Get Opponent Data
         let cardKey = this.gameManager.getCardKey( this.gameManager.battleSlotNumber )
@@ -70,8 +92,8 @@ export class Battle extends Scene
         // Render Player Attack Bar
         this.playerAttackBar = new PlayerAttackBar( this, GameLib.screenWidth/2,GameLib.screenHeight-450, 20 )
         this.playerAttackBar.callbackBulbButton = ()=>{
-            this.playerAttackBar.hideBulbButton()
-            this.playerAttack()
+            this.playerAttackBar.hideBulbButton();
+            this.modalQuestion.startQuestion();
         }
 
         this.events.addListener('player-update',()=>{
@@ -105,10 +127,12 @@ export class Battle extends Scene
         })
 
         this.events.addListener('continue',()=>{
+            this.centerMessage.setVisible(false);
+            
             if( !this.isDone ){
                 // Start Matching
                 this.match.show();
-
+                
                 // Resume Opponent Bar
                 this.opponent.resumeAttack();
             }
@@ -139,7 +163,9 @@ export class Battle extends Scene
         debugAttack.scale = 0.5
         this.add.existing(debugAttack)
         debugAttack.onPressed(()=>{
-            this.playerAttack()
+            this.opponent.stopAttack();
+            this.match.hide();
+            this.playerAttack(true)
         })
 
         EventBus.emit('current-scene-ready', this);
@@ -149,9 +175,17 @@ export class Battle extends Scene
         this.playerHealthBar.renderHealth(this.gameManager.currentHp,this.gameManager.maxHp)
     }
 
-    playerAttack(){
+    playerAttack( isSuccess:boolean ){
+        this.centerMessage.setText('Player Attacking!');
+        this.centerMessage.setVisible(true);
+
         this.time.delayedCall(1000,()=>{
-            this.opponent.damage(1);
+            if( isSuccess ){
+                this.centerMessage.setText('Mr. Worm HP -1');
+                this.opponent.damage(1);
+            }else{
+                this.centerMessage.setText('Attack failed!!!');
+            }
         },[],this);
         //
         this.time.delayedCall(2000,()=>{
@@ -160,7 +194,12 @@ export class Battle extends Scene
     }
 
     opponentAttack(){
+        this.centerMessage.setText('Mr. Worm Attacking!');
+        this.centerMessage.setVisible(true);
+        
         this.time.delayedCall(1000,()=>{
+            this.centerMessage.setText('Player HP -1');
+            //
             this.gameManager.damage();
             this.opponent.resetAttack();
         },[],this);
@@ -211,8 +250,8 @@ export class Battle extends Scene
 
     renderEnding( status: string ){
         let text:string = 'Invalid Status...'
-        if( status == 'win' ) text = "You Win!";
-        if( status == 'lose' ) text = "You Lose!";
+        if( status == 'win' ) text = "Mr. Worm fainted.";
+        if( status == 'lose' ) text = "You fainted!";
 
         let endText = this.add.text(GameLib.screenWidth/2, GameLib.screenHeight/2 -150,text,{
             font: 'bold 60px Arial',
@@ -249,6 +288,8 @@ export class Battle extends Scene
         this.events.removeListener('opponent-attack');
         this.events.removeListener('continue');
         this.events.removeListener('battle-end');
-        this.cameras.resetAll()
+        this.cameras.resetAll();
+
+        this.scene.remove('ModalQuestion');
     }
 }

@@ -4,6 +4,7 @@ import AdventureCard from '../components/AdventureCard';
 import CloseButton from '@/lib/components/CloseButton';
 import HealthBar from '../components/HealthBar';
 import PlayerAttackBar from '../components/PlayerAttackBar';
+import ModalQuestion from '../modals/ModalQuestion';
 
 export class Preloader extends Scene
 {
@@ -40,6 +41,7 @@ export class Preloader extends Scene
         AdventureCard.preload(this);
         CloseButton.preload(this);
         PlayerAttackBar.preload(this);
+        ModalQuestion.preload(this);
 
         // Load Game Component
         HealthBar.preload(this)
@@ -66,7 +68,7 @@ export class Preloader extends Scene
         //  For example, you can define global animations here, so we can use them in other scenes.
 
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
-        // this.scene.start('MainMenu');
-        this.scene.start('Game');
+        this.scene.start('MainMenu');
+        // this.scene.start('Game');
     }
 }

@@ -64,6 +64,41 @@ export const ACardList: ACard[] = [
                 card.clean()
             }
         }
+    },
+    {
+        key: 'rock',
+        title: 'Rock',
+        description: 'It\' just a rock. Nothing Special.',
+        spriteKey: 'cardRock',
+        actionText: 'Check',
+        requireToComplete: false,
+        onPress: (card: AdventureCard )=>{
+            card.openModalResult()
+        },
+        onResult: (card: AdventureCard)=>{
+            if( card != undefined && card.gameManager != undefined ){
+                card.isCompleted = true
+                card.clean()
+            }
+        }
+    },
+    {
+        key: 'end',
+        title: 'End',
+        description: 'Level ending.',
+        spriteKey: 'cardEnd',
+        actionText: 'Yay!',
+        requireToComplete: false,
+        onPress: (card: AdventureCard )=>{
+            card.openModalResult()
+        },
+        onResult: (card: AdventureCard)=>{
+            if( card != undefined && card.gameManager != undefined ){
+                card.gameManager.setEnd();
+                card.isCompleted = true;
+                card.clean()
+            }
+        }
     }
 ]
 

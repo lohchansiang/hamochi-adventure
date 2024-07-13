@@ -10,6 +10,8 @@ export default class AdventureCard extends GameObjects.Container{
         scene.load.image("cardChest", "assets/adventure/game/card/cardChest.png");
         scene.load.image("cardHeal", "assets/adventure/game/card/cardHeal.png");
         scene.load.image("cardWorm", "assets/adventure/game/card/cardWorm.png");
+        scene.load.image("cardEnd", "assets/adventure/game/card/cardEnd.png");
+        scene.load.image("cardRock", "assets/adventure/game/card/cardRock.png");
     }
 
     gameManager: GameManager

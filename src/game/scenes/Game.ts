@@ -9,7 +9,7 @@ import HealthBar from '../components/HealthBar';
 
 export class Game extends Scene
 {
-    renderDebug: boolean = false
+    renderDebug: boolean = true
     gameManager: GameManager
     //
     camera: Phaser.Cameras.Scene2D.Camera;
@@ -25,6 +25,7 @@ export class Game extends Scene
     player: GameObjects.Sprite
     //
     nextButton: SpriteButton
+    nextHint: GameObjects.Text
     //
 
     constructor ()
@@ -46,14 +47,12 @@ export class Game extends Scene
         this.gameManager = new GameManager(this);
         if( isContinue ){
             this.gameManager.loadData()
+            this.initStep( !(isContinue) )
         }
 
         // Render Next Button
         this.renderPlayerAvatar()
         this.renderNextButton()
-
-        // 3 Slot Generate
-        this.initStep( !(isContinue) )
 
         // Render Player Step & HP (Run Once)
         this.renderUI()
@@ -61,9 +60,9 @@ export class Game extends Scene
         // Render Debug Button
         if( this.renderDebug ){
             this.renderDebugRegenerate()
-            this.renderDebugDamage()
-            this.renderDebugHeal()
-            this.renderDebugSaveLoad()
+            // this.renderDebugDamage()
+            // this.renderDebugHeal()
+            // this.renderDebugSaveLoad()
         }
 
         // Add Listener
@@ -119,7 +118,7 @@ export class Game extends Scene
     }
 
     renderDebugRegenerate(){
-        let debugRegenerateButton:DebugButton = new DebugButton(this,150,GameLib.screenHeight - 300,'Next')
+        let debugRegenerateButton:DebugButton = new DebugButton(this,150,GameLib.screenHeight - 300,'Skip')
         debugRegenerateButton.scale = 0.5
         this.add.existing(debugRegenerateButton)
         debugRegenerateButton.onPressed(()=>{
@@ -162,6 +161,7 @@ export class Game extends Scene
     }
 
     renderNextButton(){
+        this.nextHint = this.add.text(GameLib.screenWidth - 200,GameLib.screenHeight/2 + 200,'Go',{fontSize:40,color:'black'}).setOrigin(0.5)
         this.nextButton = new SpriteButton(this, GameLib.screenWidth - 200, GameLib.screenHeight/2 + 100, 'next')
 
         this.nextButton.onPressed(()=>{
