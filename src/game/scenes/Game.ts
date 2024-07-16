@@ -245,10 +245,7 @@ export class Game extends Scene
 
     renderCard( index: number ){
         // Check if need to destroy without notice
-        if( this.cards && this.cards[index] && this.cards[index].cardData && this.cards[index].cardData.key != this.gameManager.getCardKey(index+1) ){
-            this.cards[index].destroy();
-            this.cards[index] = null;
-        } 
+        this.resetCard( index );
 
         let xPositions: number[] = [200,GameLib.screenWidth/2, GameLib.screenWidth - 200];
         let y: number = GameLib.screenHeight/3;
@@ -258,6 +255,18 @@ export class Game extends Scene
             this.cards[index] = new AdventureCard(this, xPositions[index], y, this.gameManager.getCardKey(index+1), this.gameManager,index+1);
             this.cards[index].setVisible(false);
             this.cards[index].animIn();
+        }
+    }
+
+    resetCard(index: number){
+        if( !this.cards ) return;
+        if( !this.cards[index] ) return;
+        if( !this.cards[index].cardData ) return;
+        if( !this.cards[index].cardData ) return;
+
+        if( this.cards[index].cardData.key != this.gameManager.getCardKey(index+1) ){
+            this.cards[index].destroy();
+            this.cards[index] = null;
         }
     }
 
