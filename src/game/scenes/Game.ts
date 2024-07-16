@@ -261,6 +261,7 @@ export class Game extends Scene
     resetCard(index: number){
         if( !this.cards ) return;
         if( !this.cards[index] ) return;
+        if( this.cards[index] == null ) return;
         if( !this.cards[index].cardData ) return;
         if( !this.cards[index].cardData ) return;
 
