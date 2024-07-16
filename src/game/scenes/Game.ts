@@ -255,12 +255,12 @@ export class Game extends Scene
             if( this.gameManager.getCardKey(index+1) ){
                 // New Card
                 this.cards[index] = new AdventureCard(this, xPositions[index], y, this.gameManager.getCardKey(index+1), this.gameManager,index+1);
-                
-                if( this.cards[index] && this.cards[index] != null ){
-                    this.cards[index].setVisible(false);
-                    this.cards[index].animIn();
-                }
             }
+        }
+
+        if( this.cards && this.cards[index] && this.cards[index] != null ){
+            this.cards[index].setVisible(false);
+            this.cards[index].animIn();
         }
     }
 
