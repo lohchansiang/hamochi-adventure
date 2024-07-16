@@ -258,20 +258,14 @@ export class Game extends Scene
             }
         }
 
-        if( this.cards && ( this.cards[index] || this.cards[index] != null ) ){
-            this.cards[index].setVisible(false);
-            this.cards[index].animIn();
-        }
+        this.cards[index]?.setVisible(false);
+        this.cards[index]?.animIn();
     }
 
     resetCard(index: number){
-        if( !this.cards ) return;
-        if( !this.cards[index] ) return;
-        if( this.cards[index] == null ) return;
-        if( !this.cards[index].cardData ) return;
-
-        if( this.cards[index].cardData.key != this.gameManager.getCardKey(index+1) ){
-            this.cards[index].destroy();
+        let cardData = this.cards[index]?.cardData
+        if( cardData && cardData.key != this.gameManager.getCardKey(index+1) ){
+            this.cards[index]?.destroy();
             this.cards[index] = null;
         }
     }
