@@ -255,15 +255,20 @@ export class Game extends Scene
             if( this.gameManager.getCardKey(index+1) ){
                 // New Card
                 this.cards[index] = new AdventureCard(this, xPositions[index], y, this.gameManager.getCardKey(index+1), this.gameManager,index+1);
+            
+                this.cards[index]?.setVisible(false);
+                this.cards[index]?.animIn();
             }
         }
-
-        this.cards[index]?.setVisible(false);
-        this.cards[index]?.animIn();
     }
 
     resetCard(index: number){
+        if( !this.cards ) return;
+        if( !this.cards[index] ) return;
+        if( this.cards[index] == null ) return;
+
         let cardData = this.cards[index]?.cardData
+        
         if( cardData && cardData.key != this.gameManager.getCardKey(index+1) ){
             this.cards[index]?.destroy();
             this.cards[index] = null;
