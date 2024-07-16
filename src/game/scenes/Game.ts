@@ -250,7 +250,8 @@ export class Game extends Scene
         let xPositions: number[] = [200,GameLib.screenWidth/2, GameLib.screenWidth - 200];
         let y: number = GameLib.screenHeight/3;
         // Rerender Card if no card found and have active card key
-        if( this.cards[index] == null && this.gameManager.getCardKey(index+1) && !this.cards[index] ){
+        if( ( !this.cards[index] || ( this.cards[index] && this.cards[index] == null ) )
+            && this.gameManager.getCardKey(index+1) ){
             // New Card
             this.cards[index] = new AdventureCard(this, xPositions[index], y, this.gameManager.getCardKey(index+1), this.gameManager,index+1);
             this.cards[index].setVisible(false);
@@ -262,7 +263,6 @@ export class Game extends Scene
         if( !this.cards ) return;
         if( !this.cards[index] ) return;
         if( this.cards[index] == null ) return;
-        if( !this.cards[index].cardData ) return;
         if( !this.cards[index].cardData ) return;
 
         if( this.cards[index].cardData.key != this.gameManager.getCardKey(index+1) ){
