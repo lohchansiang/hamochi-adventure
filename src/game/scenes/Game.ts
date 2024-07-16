@@ -92,8 +92,14 @@ export class Game extends Scene
         })
 
         this.events.addListener('new-step',()=>{
+            this.resetCard(0, true );
+            this.resetCard(1, true );
+            this.resetCard(2, true);
             this.gameManager.generateCardKeys();
-            this.renderCards();
+            
+            this.time.delayedCall(500,()=>{
+                this.renderCards();
+            },[],this);
         })
 
         this.events.addListener('player-update',()=>{
@@ -262,16 +268,18 @@ export class Game extends Scene
         }
     }
 
-    resetCard(index: number){
+    resetCard(index: number, isForce: boolean = false){
         if( !this.cards ) return;
         if( !this.cards[index] ) return;
         if( this.cards[index] == null ) return;
 
         let cardData = this.cards[index]?.cardData
         
-        if( cardData && cardData.key != this.gameManager.getCardKey(index+1) ){
-            this.cards[index]?.destroy();
-            this.cards[index] = null;
+        if( isForce || ( cardData && cardData.key != this.gameManager.getCardKey(index+1) ) ){
+            // this.cards[index]?.dispose(()=>{
+                this.cards[index]?.destroy();
+                this.cards[index] = null;
+            // })
         }
     }
 

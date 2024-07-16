@@ -91,8 +91,6 @@ export default class AdventureCard extends GameObjects.Container{
         this.button.destroy()
         this.title.destroy()
         this.sprite.destroy()
-        
-        this.gameManager.clearCardKey(this.slotNumber)
     }
 
     openModalResult(){
@@ -133,6 +131,23 @@ export default class AdventureCard extends GameObjects.Container{
         // Tween in
         this.scene.tweens.add({
             targets: this,
+            duration: 250,
+            alpha:0,
+            ease:'Linear'
+        }).on('complete', ()=>{
+            this.clean();
+            this.gameManager.clearCardKey(this.slotNumber)
+            if( callback ) callback();
+        });
+    }
+
+    dispose( callback: Function | null = null ){
+        this.canInput = false
+
+        // Tween out
+        this.scene.tweens.add({
+            targets: this,
+            y: this.oriY - 1000,
             duration: 250,
             alpha:0,
             ease:'Linear'
