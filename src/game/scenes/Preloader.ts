@@ -5,6 +5,7 @@ import CloseButton from '@/lib/components/CloseButton';
 import HealthBar from '../components/HealthBar';
 import PlayerAttackBar from '../components/PlayerAttackBar';
 import ModalQuestion from '../modals/ModalQuestion';
+import ProgressionBar from '../components/ProgressionBar';
 
 export class Preloader extends Scene
 {
@@ -42,6 +43,7 @@ export class Preloader extends Scene
         CloseButton.preload(this);
         PlayerAttackBar.preload(this);
         ModalQuestion.preload(this);
+        ProgressionBar.preload(this);
 
         // Load Game Component
         HealthBar.preload(this)

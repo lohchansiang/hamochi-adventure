@@ -1,3 +1,4 @@
+import { callbackify } from "util"
 import AdventureCard from "./AdventureCard"
 
 export class ACard{
@@ -13,6 +14,24 @@ export class ACard{
 
 export const ACardList: ACard[] = [
     {
+        key: 'move',
+        title: 'Move',
+        description: 'Move to next position.',
+        spriteKey: 'cardMove',
+        actionText: 'Go',
+        requireToComplete: false,
+        onPress: (card: AdventureCard )=>{
+            card.openModalResult()
+        },
+        onResult: (card: AdventureCard )=>{
+            if( card != undefined && card.gameManager != undefined ){
+                card.complete(()=>{
+                    card.gameManager.nextStep();
+                })
+            }
+        }
+    },
+    {
         key: 'chest',
         title: 'Chest',
         description: '+ 50 Coins.',
@@ -24,9 +43,8 @@ export const ACardList: ACard[] = [
         },
         onResult: (card: AdventureCard )=>{
             if( card != undefined && card.gameManager != undefined ){
-                card.gameManager.addCoin(50)
-                card.isCompleted = true
-                card.clean()
+                card.gameManager.addCoin(50);
+                card.complete();
             }
         }
     },
@@ -60,8 +78,7 @@ export const ACardList: ACard[] = [
         onResult: (card: AdventureCard)=>{
             if( card != undefined && card.gameManager != undefined ){
                 card.gameManager.heal()
-                card.isCompleted = true
-                card.clean()
+                card.complete();
             }
         }
     },
@@ -77,8 +94,7 @@ export const ACardList: ACard[] = [
         },
         onResult: (card: AdventureCard)=>{
             if( card != undefined && card.gameManager != undefined ){
-                card.isCompleted = true
-                card.clean()
+                card.complete();
             }
         }
     },
@@ -95,8 +111,7 @@ export const ACardList: ACard[] = [
         onResult: (card: AdventureCard)=>{
             if( card != undefined && card.gameManager != undefined ){
                 card.gameManager.setEnd();
-                card.isCompleted = true;
-                card.clean()
+                card.complete();
             }
         }
     }

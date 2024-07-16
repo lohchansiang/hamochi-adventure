@@ -7,7 +7,6 @@ import DebugButton from '@/lib/components/DebugButton';
 import { ACard, CardRepo } from '../components/CardRepo';
 import Opponent from '../components/Opponent';
 import HealthBar from '../components/HealthBar';
-import ModalSimpleMessage from '../modals/ModalSimpleMessage';
 import Match from '../components/Match';
 import PlayerAttackBar from '../components/PlayerAttackBar';
 import ModalQuestion from '../modals/ModalQuestion';
@@ -83,12 +82,6 @@ export class Battle extends Scene
         this.playerHealthBar = new HealthBar(this,GameLib.screenWidth/2,GameLib.screenHeight-350)
         this.renderHealth()
 
-        // Render Match
-        this.match = new Match(this,GameLib.screenWidth/2,GameLib.screenHeight/2-50)
-        this.match.callbackScore = ( value: number )=>{
-            this.playerAttackBar.addValue(value);
-        }
-
         // Render Player Attack Bar
         this.playerAttackBar = new PlayerAttackBar( this, GameLib.screenWidth/2,GameLib.screenHeight-450, 20 )
         this.playerAttackBar.callbackBulbButton = ()=>{
@@ -96,12 +89,23 @@ export class Battle extends Scene
             this.modalQuestion.startQuestion();
         }
 
+        // Render Match
+        this.match = new Match(this,GameLib.screenWidth/2,GameLib.screenHeight/2-50)
+        // this.match.setTarget(this.playerAttackBar.startX, this.playerAttackBar.startY);
+        this.match.setTarget(this.player.x, this.player.y);
+        this.match.callbackScore = ( value: number )=>{
+            // Add Tween
+            this.playerAttackBar.addValue(value);
+        }
+
         this.events.addListener('player-update',()=>{
+            // WHen Player Health Changes
             this.renderHealth()
             this.checkWinLoseCondition()
         })
 
         this.events.addListener('opponent-update',()=>{
+            // When Opponent Health Changes
             this.checkWinLoseCondition()
         })
         
@@ -269,8 +273,8 @@ export class Battle extends Scene
 
     handleWin(){
         this.clean()
-        this.gameManager.clearCardKey(this.gameManager.battleSlotNumber)
-        this.gameManager.setBattleSlotNumber(0)
+        this.gameManager.setCompletedBattleSlotNumber(this.gameManager.battleSlotNumber);
+        this.gameManager.setBattleSlotNumber(0);
         this.gameManager.saveData()
         this.scene.start('Game',{isContinue:true});
     }

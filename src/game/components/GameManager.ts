@@ -16,6 +16,7 @@ export default class GameManager{
     cardKey3: string
     //
     battleSlotNumber: number
+    completedBattleSlotNumber: number
     isEnd: boolean
 
     constructor(scene:Scene){
@@ -25,6 +26,8 @@ export default class GameManager{
         this.cardKey2 = ''
         this.cardKey3 = ''
         this.isEnd = false
+        this.battleSlotNumber = 0
+        this.completedBattleSlotNumber = 0
     }
 
     heal(){
@@ -46,7 +49,7 @@ export default class GameManager{
         this.scene.events.emit('player-update')
     }
 
-    addStep(){
+    nextStep(){
         let newStep = this.currentStep + 1
 
         if( newStep < 0 ) newStep = 0
@@ -55,6 +58,7 @@ export default class GameManager{
         this.currentStep = newStep;
 
         this.scene.events.emit('player-update')
+        this.scene.events.emit('new-step')
     }
 
     addCoin( value: number ){
@@ -80,9 +84,22 @@ export default class GameManager{
             this.cardKey1 = ''
             this.cardKey2 = 'end'
             this.cardKey3 = ''
+        }else if( this.currentStep == 0 ){
+            this.cardKey1 = ''
+            this.cardKey2 = 'move'
+            this.cardKey3 = ''
         }else{
             let keys: string[] = ['chest','heal','battle','rock']
-            keys = GameLib.shuffle(keys)
+            
+
+            if( this.currentStep == 1){
+                keys = ['chest','heal','rock'];
+                keys = GameLib.shuffle(keys);
+                keys.unshift('battle');
+                keys = keys.slice(0,3);
+            }
+
+            keys = GameLib.shuffle(keys);
 
             this.cardKey1 = keys[0]
             this.cardKey2 = keys[1]
@@ -99,10 +116,30 @@ export default class GameManager{
     }
     
     clearCardKey( slotKey: number ){
-        if( slotKey == 1 ) this.cardKey1 = '';
-        if( slotKey == 2 ) this.cardKey2 = '';
-        if( slotKey == 3 ) this.cardKey3 = '';
+        if( slotKey == 1 ){
+            this.cardKey1 = '';
+        }
+        if( slotKey == 2 ){
+            this.cardKey2 = '';
+        }
+        if( slotKey == 3 ){
+            this.cardKey3 = '';
+        } 
 
+        if( this.checkCanNext() ){
+            // If no move card
+            if( this.cardKey1 != 'move' && this.cardKey2 != 'move' && this.cardKey3 != 'move'){
+                if( slotKey == 1 ){
+                    this.cardKey1 = 'move';
+                }
+                if( slotKey == 2 ){
+                    this.cardKey2 = 'move';
+                }
+                if( slotKey == 3 ){
+                    this.cardKey3 = 'move';
+                } 
+            }
+        }
         console.log( "CardKeys > " + this.cardKey1 + "," + this.cardKey2 + "," + this.cardKey3);
         this.scene.events.emit('card-update') // Update Next
     }
@@ -115,7 +152,8 @@ export default class GameManager{
             cardKey1: this.cardKey1,
             cardKey2: this.cardKey2,
             cardKey3: this.cardKey3,
-            battleSlotNumber: this.battleSlotNumber
+            battleSlotNumber: this.battleSlotNumber,
+            completedBattleSlotNumber: this.completedBattleSlotNumber
         }
 
         this.scene.registry.setFreeze(false);
@@ -136,6 +174,7 @@ export default class GameManager{
             this.cardKey2 = loadData.cardKey2
             this.cardKey3 = loadData.cardKey3
             this.battleSlotNumber = loadData.battleSlotNumber
+            this.completedBattleSlotNumber = loadData.completedBattleSlotNumber
         }
         
         this.scene.registry.setFreeze(true);
@@ -181,6 +220,12 @@ export default class GameManager{
         }   
     }
 
+    setCompletedBattleSlotNumber( slotNumber: number ){
+        if( this.getCardKey(slotNumber) == 'battle' ){
+            this.completedBattleSlotNumber = slotNumber
+        }   
+    }
+    
     setEnd(){
         this.isEnd = true;
 

@@ -67,7 +67,7 @@ export default class ModalAdventureCard extends Phaser.Scene{
         })
         this.container.add(this.closeButton)
 
-        this.button = new RectButton(this,GameLib.screenWidth/2,GameLib.screenHeight/2 + 400, 'OK')
+        this.button = new RectButton(this,GameLib.screenWidth/2,GameLib.screenHeight/2 + 400, card.cardData?.actionText)
         this.button.onPressed(()=>{
             if( card && card.cardData && card.cardData.onResult ){
                 card.cardData.onResult(card);

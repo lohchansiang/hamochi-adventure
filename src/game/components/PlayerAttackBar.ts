@@ -16,15 +16,19 @@ export default class PlayerAttackBar{
     width: number = 400
     height: number = 50
     padding: number = 10
+    x:number
+    y:number
     startX: number
     startY: number
     //
     progressBar: GameObjects.Graphics
     progressBox: GameObjects.Graphics
     //
+
     bulbContainer: GameObjects.Container
     bulb: GameObjects.Sprite
     bulbBack: GameObjects.Sprite
+    bulbTween: Phaser.Tweens.Tween
     //
     callbackBulbButton: Function | null
     
@@ -32,6 +36,8 @@ export default class PlayerAttackBar{
         this.scene = scene
         this.target = target
 
+        this.x = x
+        this.y = y
         this.startX = x - (this.width/2)
         this.startY = y - (this.height/2)
 
@@ -40,7 +46,7 @@ export default class PlayerAttackBar{
         this.progressBox.fillRect(this.startX, this.startY, this.width, this.height);
 
         this.progressBar = this.scene.add.graphics();
-        this.renderProgressBar()
+        this.updateProgressBar()
 
         this.renderBulbButton()
     }
@@ -55,14 +61,24 @@ export default class PlayerAttackBar{
         }
         
         this.current = newCurrent
-        this.renderProgressBar()
+        this.updateProgressBar()
 
         if( this.current == this.target ){
             this.scene.events.emit('player-attack')
         }
+
+        this.scene.tweens.add({
+            targets: [this.progressBox, this.progressBar],
+            y: '+=10',
+            duration: 150,
+            yoyo: true,
+            onComplete:()=>{
+
+            }
+        })
     }
 
-    renderProgressBar(){
+    updateProgressBar(){
         let width = ( this.width - (2*this.padding) ) * ( this.current / this.target)
         let height = this.height - (2*this.padding)
         this.progressBar.fillStyle(0x00ff00, 1);
@@ -86,23 +102,33 @@ export default class PlayerAttackBar{
             if( this.callbackBulbButton ) this.callbackBulbButton();
         },this)
 
-        this.hideBulbButton()
+        this.hideBulbButton();
     }
 
     showBulbButton(){
         this.bulbBack.setInteractive();
         this.bulbContainer.setVisible(true);
+        this.bulbContainer.scale = 1;
+        this.bulbTween = this.scene.tweens.add({
+            targets: this.bulbContainer,
+            scale: 1.1,
+            repeat: -1,
+            yoyo: true,
+            duration: 300
+        });
     }
 
     hideBulbButton(){
         this.bulbBack.disableInteractive();
         this.bulbContainer.setVisible(false);
+
+        if( this.bulbTween ) this.scene.tweens.remove(this.bulbTween);
     }
 
     resetProgressBar(){
         this.current = 0;
         
         this.progressBar.clear()
-        this.renderProgressBar()
+        this.updateProgressBar()
     }
 }

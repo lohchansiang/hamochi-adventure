@@ -1,5 +1,6 @@
 import GameLib from "@/lib/GameLib";
 import { Game, GameObjects, Scene } from "phaser";
+import PlayerAttackBar from "./PlayerAttackBar";
 
 class Gem{
     gemColor: string
@@ -40,6 +41,9 @@ export default class Match{
     callbackScore: Function | null
     //
     isShow: boolean = true
+    //
+    targetX: number
+    targetY: number
 
     constructor(scene: Scene, x: number, y: number){
         this.scene = scene
@@ -316,7 +320,7 @@ export default class Match{
                             destroyed --;
                             this.gameArray[i][j].gemSprite.visible = false;
                             this.poolArray.push(this.gameArray[i][j].gemSprite);
-                            this.addScore(1)
+                            this.addScore(1, this.gameArray[i][j].gemSprite.x, this.gameArray[i][j].gemSprite.y )
 
                             if(destroyed == 0){
                                 this.makeGemsFall();
@@ -420,14 +424,18 @@ export default class Match{
         return this.gemColors[Phaser.Math.Between(0, this.gemColors.length - 1)];
     }
 
-    addScore(value:number){
+    addScore(value:number, x: number, y: number){
         this.score += value
 
         if( this.scoreText)
             this.scoreText.setText("Score: " + this.score )
 
-        if( this.callbackScore && this.isShow ) 
-            this.callbackScore(value)
+        if( this.isShow ){
+            this.moveScoreToTarget(x,y,()=>{
+                if( this.callbackScore ) 
+                    this.callbackScore(value)
+            })
+        }
     }
 
     show(){
@@ -439,4 +447,24 @@ export default class Match{
         this.gemGroup.setVisible(false)
         this.isShow = false
     }
+
+    setTarget(x:number,y:number){
+        this.targetX = x
+        this.targetY = y
+    }
+
+    moveScoreToTarget( fromX:number,fromY:number, callback: Function ){
+        let score = this.scene.add.circle(fromX,fromY,20,0x00ff00).setDepth(100);
+        this.scene.tweens.add({
+            targets: score,
+            x: this.targetX,
+            y: this.targetY,
+            duration: 300,
+            callbackScope: this,
+            onComplete: function(){
+                score.destroy()
+                if(callback) callback()
+            }
+        })
+    }   
 }
