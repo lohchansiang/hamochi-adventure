@@ -246,8 +246,8 @@ export class Game extends Scene
     renderCard( index: number ){
         // Check if need to destroy without notice
         if( this.cards[index] 
-            && this.cards[index] .cardData 
-            && this.cards[index] .cardData.key != this.gameManager.getCardKey(index+1) 
+            && this.cards[index].cardData 
+            && this.cards[index].cardData.key != this.gameManager.getCardKey(index+1) 
         ){
             this.cards[index].destroy();
             this.cards[index] = null;
