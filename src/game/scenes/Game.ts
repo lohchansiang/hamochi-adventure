@@ -258,7 +258,7 @@ export class Game extends Scene
             }
         }
 
-        if( this.cards[index] != null && this.cards[index] ){
+        if( this.cards && ( this.cards[index] || this.cards[index] != null ) ){
             this.cards[index].setVisible(false);
             this.cards[index].animIn();
         }
