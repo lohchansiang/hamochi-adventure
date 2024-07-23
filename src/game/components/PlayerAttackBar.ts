@@ -16,6 +16,8 @@ export default class PlayerAttackBar{
     width: number = 400
     height: number = 50
     padding: number = 10
+    maxChargePerSwipe: number = 10
+    currentSwipeCharge: number
     x:number
     y:number
     startX: number
@@ -36,6 +38,7 @@ export default class PlayerAttackBar{
         this.scene = scene
         this.target = target
 
+        this.currentSwipeCharge = 0
         this.x = x
         this.y = y
         this.startX = x - (this.width/2)
@@ -52,30 +55,35 @@ export default class PlayerAttackBar{
     }
 
     addValue( value :number){
-        let newCurrent = this.current + value
+        if( this.currentSwipeCharge < this.maxChargePerSwipe ){
+            this.currentSwipeCharge += 1
+            
+            let newCurrent = this.current + value
 
-        if( newCurrent > this.target ){
-            newCurrent = this.target
-        }else if( newCurrent < 0 ){
-            newCurrent = 0;
-        }
-        
-        this.current = newCurrent
-        this.updateProgressBar()
-
-        if( this.current == this.target ){
-            this.scene.events.emit('player-attack')
-        }
-
-        this.scene.tweens.add({
-            targets: [this.progressBox, this.progressBar],
-            y: '+=10',
-            duration: 150,
-            yoyo: true,
-            onComplete:()=>{
-
+            
+            if( newCurrent > this.target ){
+                newCurrent = this.target
+            }else if( newCurrent < 0 ){
+                newCurrent = 0;
             }
-        })
+        
+            this.current = newCurrent
+            this.updateProgressBar()
+
+            if( this.current == this.target ){
+                this.scene.events.emit('player-attack')
+            }
+
+            this.scene.tweens.add({
+                targets: [this.progressBox, this.progressBar],
+                y: '+=10',
+                duration: 150,
+                yoyo: true,
+                onComplete:()=>{
+    
+                }
+            })
+        }
     }
 
     updateProgressBar(){
@@ -130,5 +138,9 @@ export default class PlayerAttackBar{
         
         this.progressBar.clear()
         this.updateProgressBar()
+    }
+
+    resetSwipe(){
+        this.currentSwipeCharge = 0
     }
 }

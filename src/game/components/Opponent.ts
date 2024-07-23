@@ -61,11 +61,11 @@ export default class Opponent{
         this.scene.events.emit('opponent-update')
     }
 
-    resetAttack(){
+    resetAttackBar(){
         this.attackBar.resetProgressBar();
     }
 
-    stopAttack(){
+    stopAttackBar(){
         this.attackBar.pause();
     }
 

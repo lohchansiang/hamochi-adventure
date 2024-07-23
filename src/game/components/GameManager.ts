@@ -58,7 +58,8 @@ export default class GameManager{
         this.currentStep = newStep;
 
         this.scene.events.emit('player-update')
-        this.scene.events.emit('new-step')
+        // this.scene.events.emit('new-step')
+        this.scene.events.emit('travel-transition')
     }
 
     addCoin( value: number ){

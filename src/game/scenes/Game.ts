@@ -7,6 +7,7 @@ import DebugButton from '@/lib/components/DebugButton';
 import SpriteButton from '@/lib/components/SpriteButton';
 import HealthBar from '../components/HealthBar';
 import ProgressionBar from '../components/ProgressionBar';
+import TravelTransition from '../components/TravelTransition';
 
 export class Game extends Scene
 {
@@ -30,6 +31,8 @@ export class Game extends Scene
     //
     nextButton: SpriteButton
     nextHint: GameObjects.Text
+    //
+    travelTransition: TravelTransition
 
     constructor ()
     {
@@ -51,6 +54,7 @@ export class Game extends Scene
         this.gameManager = new GameManager(this);
         this.cards = [null,null,null];
         
+        this.travelTransition = new TravelTransition(this,GameLib.screenWidth/2,GameLib.screenHeight/2 -200);
 
         if( isContinue ){
             this.gameManager.loadData()
@@ -58,7 +62,7 @@ export class Game extends Scene
 
         // Render Debug Button
         if( this.renderDebug ){
-            this.renderDebugRegenerate()
+            // this.renderDebugRegenerate()
             // this.renderDebugDamage()
             // this.renderDebugHeal()
             // this.renderDebugSaveLoad()
@@ -91,13 +95,25 @@ export class Game extends Scene
             }
         })
 
+        this.events.addListener('travel-transition',()=>{
+            this.resetCard(0, true );
+            this.resetCard(1, true );
+            this.resetCard(2, true);
+
+            this.travelTransition.runTransition( ()=>{
+                this.events.emit('new-step');
+            });
+            
+        })
+
         this.events.addListener('new-step',()=>{
             this.resetCard(0, true );
             this.resetCard(1, true );
             this.resetCard(2, true);
+
             this.gameManager.generateCardKeys();
             
-            this.time.delayedCall(500,()=>{
+            this.time.delayedCall(800,()=>{
                 this.renderCards();
             },[],this);
         })
@@ -304,6 +320,7 @@ export class Game extends Scene
     clean(){
         this.events.removeListener('game-entry');
         this.events.removeListener('game-start');
+        this.events.removeListener('travel-transition');
         this.events.removeListener('new-step');
         this.events.removeListener('player-update');
         this.events.removeListener('card-update');

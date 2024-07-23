@@ -6,6 +6,7 @@ import HealthBar from '../components/HealthBar';
 import PlayerAttackBar from '../components/PlayerAttackBar';
 import ModalQuestion from '../modals/ModalQuestion';
 import ProgressionBar from '../components/ProgressionBar';
+import TravelTransition from '../components/TravelTransition';
 
 export class Preloader extends Scene
 {
@@ -44,6 +45,7 @@ export class Preloader extends Scene
         PlayerAttackBar.preload(this);
         ModalQuestion.preload(this);
         ProgressionBar.preload(this);
+        TravelTransition.preload(this);
 
         // Load Game Component
         HealthBar.preload(this)

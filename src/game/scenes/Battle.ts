@@ -97,7 +97,10 @@ export class Battle extends Scene
             // Add Tween
             this.playerAttackBar.addValue(value);
         }
-
+        this.match.callbackEndProcess = () =>{
+            this.playerAttackBar.resetSwipe();
+        }
+        
         this.events.addListener('player-update',()=>{
             // WHen Player Health Changes
             this.renderHealth()
@@ -111,7 +114,7 @@ export class Battle extends Scene
         
         this.events.addListener('player-attack',()=>{
             // Stop Opponent Bar
-            this.opponent.stopAttack();
+            this.opponent.stopAttackBar();
 
             // Stop & Hide Matching
             this.match.hide()
@@ -122,7 +125,7 @@ export class Battle extends Scene
         
         this.events.addListener('opponent-attack',()=>{
             // Stop Opponent Bar
-            this.opponent.stopAttack();
+            this.opponent.stopAttackBar();
 
             // Stop Matching
             this.match.hide();
@@ -131,9 +134,9 @@ export class Battle extends Scene
         })
 
         this.events.addListener('continue',()=>{
-            this.centerMessage.setVisible(false);
-            
             if( !this.isDone ){
+                this.centerMessage.setVisible(false); 
+
                 // Start Matching
                 this.match.show();
                 
@@ -145,7 +148,7 @@ export class Battle extends Scene
         this.events.addListener('battle-end',()=>{
             this.isDone = true;
             this.match.hide();
-            this.opponent.stopAttack();
+            this.opponent.stopAttackBar();
         })
 
         // Debug
@@ -167,7 +170,7 @@ export class Battle extends Scene
         debugAttack.scale = 0.5
         this.add.existing(debugAttack)
         debugAttack.onPressed(()=>{
-            this.opponent.stopAttack();
+            this.opponent.stopAttackBar();
             this.match.hide();
             this.playerAttack(true)
         })
@@ -185,16 +188,32 @@ export class Battle extends Scene
 
         this.time.delayedCall(1000,()=>{
             if( isSuccess ){
-                this.centerMessage.setText('Mr. Worm HP -1');
-                this.opponent.damage(1);
+                let circle = this.add.circle(this.player.x, this.player.y, 50, 0xff0000);
+                this.tweens.add({
+                    targets: circle,
+                    x: this.opponent.avatar.x,
+                    y: this.opponent.avatar.y,
+                    duration: 500,
+                    ease: 'Power'
+                }).on('complete', ()=>{
+                    circle.destroy();
+                    this.opponent.damage(1);
+                    this.centerMessage.setText('Mr. Worm HP -1');
+
+                    //
+                    this.time.delayedCall(2000,()=>{
+                        this.events.emit('continue');
+                    },[],this)
+                });
             }else{
                 this.centerMessage.setText('Attack failed!!!');
+
+                this.time.delayedCall(1500,()=>{
+                    this.events.emit('continue');
+                },[],this)
             }
         },[],this);
-        //
-        this.time.delayedCall(2000,()=>{
-            this.events.emit('continue');
-        },[],this)
+        
     }
 
     opponentAttack(){
@@ -202,16 +221,28 @@ export class Battle extends Scene
         this.centerMessage.setVisible(true);
         
         this.time.delayedCall(1000,()=>{
-            this.centerMessage.setText('Player HP -1');
-            //
-            this.gameManager.damage();
-            this.opponent.resetAttack();
+
+            let circle = this.add.circle(this.opponent.avatar.x, this.opponent.avatar.y, 50, 0xff0000);
+            this.tweens.add({
+                targets: circle,
+                x: this.player.x,
+                y: this.player.y,
+                duration: 500,
+                ease: 'Power'
+            }).on('complete', ()=>{
+                circle.destroy();
+                this.centerMessage.setText('Player HP -1');
+
+                this.gameManager.damage();
+                this.opponent.resetAttackBar();
+
+                this.time.delayedCall(2000,()=>{
+                    this.events.emit('continue');
+                },[],this)
+            });
+            
         },[],this);
         
-        //
-        this.time.delayedCall(2000,()=>{
-            this.events.emit('continue');
-        },[],this)
     }
 
     simulateWin(){
@@ -257,12 +288,14 @@ export class Battle extends Scene
         if( status == 'win' ) text = "Mr. Worm fainted.";
         if( status == 'lose' ) text = "You fainted!";
 
-        let endText = this.add.text(GameLib.screenWidth/2, GameLib.screenHeight/2 -150,text,{
-            font: 'bold 60px Arial',
-            color: '#00000',
-            align: 'center',  // 'left'|'center'|'right'|'justify'
-        },)
-        endText.setOrigin(0.5,0.5)
+        this.centerMessage.setText(text);
+        this.centerMessage.setVisible(true);
+        // let endText = this.add.text(GameLib.screenWidth/2, GameLib.screenHeight/2 -150,text,{
+        //     font: 'bold 60px Arial',
+        //     color: '#00000',
+        //     align: 'center',  // 'left'|'center'|'right'|'justify'
+        // },)
+        // endText.setOrigin(0.5,0.5)
 
         let button = new RectButton(this,GameLib.screenWidth/2,GameLib.screenHeight/2 + 200, 'OK')
         button.onPressed(()=>{

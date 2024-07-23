@@ -39,6 +39,7 @@ export default class Match{
     scoreText: GameObjects.Text
     //
     callbackScore: Function | null
+    callbackEndProcess: Function | null
     //
     isShow: boolean = true
     //
@@ -110,6 +111,7 @@ export default class Match{
 
     gemSelect(pointer: Phaser.Input.Pointer){
         if(this.canPick){
+
             this.dragging = true;
             let row = Math.floor( (pointer.y - this.startY) / this.gemSize);
             let col = Math.floor( (pointer.x - this.startX) / this.gemSize);
@@ -311,6 +313,7 @@ export default class Match{
             for(let j = 0; j < this.fieldSizeX; j ++){
                 if(this.removeMap[i][j] > 0){
                     destroyed ++;
+
                     this.scene.tweens.add({
                         targets: this.gameArray[i][j].gemSprite,
                         alpha: 0.5,
@@ -401,6 +404,9 @@ export default class Match{
                                 else{
                                     this.canPick = true;
                                     this.selectedGem = null;
+
+                                    // End of processing
+                                    if( this.callbackEndProcess ) this.callbackEndProcess()
                                 }
                             }
                         }
