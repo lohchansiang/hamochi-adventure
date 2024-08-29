@@ -48,7 +48,7 @@ export class CardMaker extends Scene
         this.load.image('buttonAdd','assets/adventure/cardmaker/buttonAdd.png');
         this.load.image('vocabAudio','assets/adventure/decks/vocabAudio.png');
         this.load.image('vocabCardBase','assets/adventure/decks/vocabCardBase.png');
-        this.load.image('vocabCardBaseBack','assets/adventure/decks/vocabCardBaseBack.png');
+        this.load.image('vocabCardBaseBack','assets/adventure/decks/vocabCardBack.png');
         this.load.image('vocabCardCrack','assets/adventure/decks/vocabCardCrack.png');
     }
 
