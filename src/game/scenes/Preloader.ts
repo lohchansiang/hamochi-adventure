@@ -7,6 +7,9 @@ import PlayerAttackBar from '../components/PlayerAttackBar';
 import ModalQuestion from '../modals/ModalQuestion';
 import ProgressionBar from '../components/ProgressionBar';
 import TravelTransition from '../components/TravelTransition';
+import PlayerAvatar from '../components/Player/PlayerAvatar';
+import { DeckRepo } from '@/lib/repos/DeckRepo';
+import BasicButton from '@/lib/components/BasicButton';
 
 export class Preloader extends Scene
 {
@@ -40,13 +43,16 @@ export class Preloader extends Scene
     {
         // Load Lib Component
         RectButton.preload(this);
+        BasicButton.preload(this);
         AdventureCard.preload(this);
         CloseButton.preload(this);
         PlayerAttackBar.preload(this);
         ModalQuestion.preload(this);
         ProgressionBar.preload(this);
         TravelTransition.preload(this);
-
+        PlayerAvatar.preload(this);
+        DeckRepo.preload(this);
+        
         // Load Game Component
         HealthBar.preload(this)
 
@@ -63,6 +69,12 @@ export class Preloader extends Scene
         this.load.image('green','/adventure/game/gem/green.png');
         this.load.image('orange','/adventure/game/gem/orange.png');
         this.load.image('red','/adventure/game/gem/red.png');
+
+        // Icons
+        this.load.image('iconCross','/adventure/icons/cross.png');
+        this.load.image('iconTick','/adventure/icons/tick.png');
+
+        this.load.image('buttonCircleAction','/adventure/components/buttonCircle.png');
 
     }
 

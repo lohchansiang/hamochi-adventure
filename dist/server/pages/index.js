@@ -109,6 +109,17 @@ module.exports = require("phaser");
 
 /***/ }),
 
+/***/ "phaser3-rex-plugins/plugins/grayscalepipeline-plugin.js":
+/*!**************************************************************************!*\
+  !*** external "phaser3-rex-plugins/plugins/grayscalepipeline-plugin.js" ***!
+  \**************************************************************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("phaser3-rex-plugins/plugins/grayscalepipeline-plugin.js");
+
+/***/ }),
+
 /***/ "react":
 /*!************************!*\
   !*** external "react" ***!

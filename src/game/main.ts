@@ -5,6 +5,10 @@ import { MainMenu } from './scenes/MainMenu';
 import { AUTO, Game } from 'phaser';
 import { Preloader } from './scenes/Preloader';
 import { Battle } from './scenes/Battle';
+import { TestGround } from './scenes/TestGround';
+import { CardMaker } from './scenes/CardMaker';
+//
+import GrayScalePipelinePlugin from 'phaser3-rex-plugins/plugins/grayscalepipeline-plugin.js';
 
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
@@ -21,10 +25,21 @@ const config: Phaser.Types.Core.GameConfig = {
         MainGame,
         Battle,
         GameOver,
+        TestGround,
+        CardMaker
     ],
     scale:{
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.ENVELOP
+    },
+    plugins: {
+        global: [{
+            key: 'rexGrayScalePipeline',
+            plugin: GrayScalePipelinePlugin,
+            start: true
+        },
+        // ...
+        ]
     }
 };
 

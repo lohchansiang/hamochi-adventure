@@ -26,10 +26,10 @@ export default class Opponent{
         this.currentHp = this.maxHp
 
         // Render Opponent
-        this.avatar = this.scene.add.sprite( GameLib.centerX(), 200, card.spriteKey )
+        this.avatar = this.scene.add.sprite( GameLib.midX, 200, card.spriteKey )
 
         // Render Health
-        this.healthBar = new HealthBar(this.scene, GameLib.centerX(), 350)
+        this.healthBar = new HealthBar(this.scene, GameLib.midX, 350)
         this.healthBar.container.scale = 0.8
         this.renderHealth()
 

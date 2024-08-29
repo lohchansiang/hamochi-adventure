@@ -36,7 +36,7 @@ export default class TravelTransition{
             key: "walking",
             frameRate: 7,
             frames: this.scene.anims.generateFrameNumbers("smoke", { start: 0, end: 7 }),
-            repeat: -1
+            repeat: -1,
         });
 
         

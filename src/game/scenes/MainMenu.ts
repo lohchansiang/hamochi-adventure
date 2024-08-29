@@ -2,6 +2,7 @@ import { GameObjects, Scene } from 'phaser';
 import { EventBus } from '../EventBus';
 import RectButton from '@/lib/components/RectButton';
 import GameLib from '@/lib/GameLib';
+import DebugButton from '@/lib/components/DebugButton';
 
 export class MainMenu extends Scene
 {
@@ -9,6 +10,9 @@ export class MainMenu extends Scene
     title: GameObjects.Text;
     logoTween: Phaser.Tweens.Tween | null;
     button: RectButton;
+    //
+    testGroundButton: DebugButton
+    cardMakerButton: DebugButton
 
     constructor ()
     {
@@ -29,6 +33,16 @@ export class MainMenu extends Scene
             stroke: '#000000', strokeThickness: 8,
             align: 'center'
         }).setOrigin(0.5).setDepth(100);
+
+        this.testGroundButton = new DebugButton(this,GameLib.screenWidth/2, GameLib.screenHeight/2 + 300, 'Test Ground');
+        this.testGroundButton.onPressed(()=>{
+            this.scene.start('TestGround');
+        })
+
+        this.cardMakerButton = new DebugButton(this,GameLib.screenWidth/2, GameLib.screenHeight/2 + 500, 'Card Maker');
+        this.cardMakerButton.onPressed(()=>{
+            this.scene.start('CardMaker');
+        })
 
         EventBus.emit('current-scene-ready', this);
     }
