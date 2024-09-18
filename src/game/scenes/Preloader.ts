@@ -10,6 +10,7 @@ import TravelTransition from '../components/TravelTransition';
 import PlayerAvatar from '../components/Player/PlayerAvatar';
 import { DeckRepo } from '@/lib/repos/DeckRepo';
 import BasicButton from '@/lib/components/BasicButton';
+import VocabCard from '../components/CardMaker/PanelSelectCard/VocabCard';
 
 export class Preloader extends Scene
 {
@@ -52,6 +53,7 @@ export class Preloader extends Scene
         TravelTransition.preload(this);
         PlayerAvatar.preload(this);
         DeckRepo.preload(this);
+        VocabCard.preload(this);
         
         // Load Game Component
         HealthBar.preload(this)
@@ -64,6 +66,7 @@ export class Preloader extends Scene
 
         this.load.image('next','/adventure/game/next.png');
         this.load.image('player','/adventure/game/player.png');
+        this.load.image('panelWhite','/adventure/game/panelWhite.png');
 
         this.load.image('blue','/adventure/game/gem/blue.png');
         this.load.image('green','/adventure/game/gem/green.png');
@@ -73,6 +76,9 @@ export class Preloader extends Scene
         // Icons
         this.load.image('iconCross','/adventure/icons/cross.png');
         this.load.image('iconTick','/adventure/icons/tick.png');
+        this.load.image('iconAudio','/adventure/icons/iconAudio.png');
+        this.load.image('iconPause','/adventure/icons/iconPause.png');
+        this.load.image('iconPlay','/adventure/icons/iconPlay.png');
 
         this.load.image('buttonCircleAction','/adventure/components/buttonCircle.png');
 

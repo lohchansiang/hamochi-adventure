@@ -89,9 +89,10 @@ export default class ForgeBottomContainer{
     generateNext(){
         this.clearChoices();
 
-        if( this.manager.currentText >= this.manager.targetText ){
+        let nextKey:string = this.manager.getNextKey();
+        if( nextKey == 'audio' ){
             this.generateAudioChoices();
-        }else if( this.manager.currentImage >= this.manager.targetImage ){
+        }else if( nextKey == 'text' ){
             this.generateTextChoices();
         }else{
             this.generateImageChoices();
@@ -118,10 +119,10 @@ export default class ForgeBottomContainer{
         let vocabs:Vocab[] = this.manager.generateChoices();
 
         if( vocabs.length == 4 ){
-            let choice1:ForgeMaterialText = new ForgeMaterialText(this.scene,this.oriX-this.gapX,this.oriY-this.gapY,vocabs[0]);
-            let choice2:ForgeMaterialText = new ForgeMaterialText(this.scene,this.oriX+this.gapX,this.oriY-this.gapY,vocabs[1]);
-            let choice3:ForgeMaterialText = new ForgeMaterialText(this.scene,this.oriX-this.gapX,this.oriY+this.gapY,vocabs[2]);
-            let choice4:ForgeMaterialText = new ForgeMaterialText(this.scene,this.oriX+this.gapX,this.oriY+this.gapY,vocabs[3]);
+            let choice1:ForgeMaterialText = new ForgeMaterialText(this.scene,this.oriX,this.oriY-this.gapY*1.5,vocabs[0]);
+            let choice2:ForgeMaterialText = new ForgeMaterialText(this.scene,this.oriX,this.oriY-this.gapY*0.5,vocabs[1]);
+            let choice3:ForgeMaterialText = new ForgeMaterialText(this.scene,this.oriX,this.oriY+this.gapY*0.5,vocabs[2]);
+            let choice4:ForgeMaterialText = new ForgeMaterialText(this.scene,this.oriX,this.oriY+this.gapY*1.5,vocabs[3]);
 
             this.choices.push( choice1.container );
             this.choices.push( choice2.container );

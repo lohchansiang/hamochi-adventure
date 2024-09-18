@@ -1,8 +1,6 @@
 import GameLib from "@/lib/GameLib"
 import { GameObjects, Scene } from "phaser"
 import { Deck, DeckRepo, Vocab } from "@/lib/repos/DeckRepo"
-import ForgeMaterialImage from "./ForgeMaterialImage"
-import { get } from "http"
 
 export default class CardMakerManager{
 
@@ -18,7 +16,7 @@ export default class CardMakerManager{
     //
     targetImage: number = 2
     targetText: number = 2
-    targetAudio: number = 2
+    targetAudio: number = 1
     currentImage: number = 0
     currentText: number = 0
     currentAudio: number = 0
@@ -30,7 +28,7 @@ export default class CardMakerManager{
     constructor(scene:Scene){
         this.scene = scene
 
-        this.broken = ['apple','banana','pear'];
+        this.broken = ['apple','banana','pear','watermelon'];
         this.owned = ['apple'];
 
         this.resetForgeValues();
@@ -166,5 +164,18 @@ export default class CardMakerManager{
         if( this.selectedVocabKey != "" && !this.owned.includes(this.selectedVocabKey) ){
             this.owned.push(this.selectedVocabKey);
         }
+    }
+
+    getNextKey():string{
+        let key:string = 'image';
+        if( this.currentText >= this.targetText ){
+            key = 'audio';
+        }else if( this.currentImage >= this.targetImage ){
+            key = 'text';
+        }else{
+            key = 'image';
+        }
+
+        return key;
     }
 }

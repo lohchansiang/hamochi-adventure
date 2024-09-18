@@ -24,7 +24,7 @@ export default class forgeFeedbackSuccess{
         this.container = scene.add.container(x,y);
         
         let size:number = 100;
-        this.sprite = scene.add.sprite(0,0,'forgeFeedbackSuccess');
+        this.sprite = scene.add.sprite(0,0,'forgeFeedbackBulb');
         this.sprite.setDisplaySize(size,size);
 
         this.container.add(this.sprite);

@@ -44,12 +44,16 @@ export class CardMaker extends Scene
         this.load.image('hammerBroke','assets/adventure/cardmaker/hammerBroke.png')
         this.load.image('forgeFeedbackHit','assets/adventure/cardmaker/forgeFeedbackHit.png')
         this.load.image('forgeFeedbackSuccess','assets/adventure/cardmaker/forgeFeedbackSuccess.png')
+        this.load.image('forgeFeedbackBulb','assets/adventure/cardmaker/forgeFeedbackBulb.png')
+        this.load.image('forgeAnvil','assets/adventure/cardmaker/forgeAnvil.png')
         //
         this.load.image('buttonAdd','assets/adventure/cardmaker/buttonAdd.png');
+        this.load.image('buttonCardSelect','assets/adventure/cardmaker/buttonCardSelect.png');
         this.load.image('vocabAudio','assets/adventure/decks/vocabAudio.png');
         this.load.image('vocabCardBase','assets/adventure/decks/vocabCardBase.png');
         this.load.image('vocabCardBaseBack','assets/adventure/decks/vocabCardBack.png');
         this.load.image('vocabCardCrack','assets/adventure/decks/vocabCardCrack.png');
+        this.load.image('vocabCardWhite','assets/adventure/decks/vocabCardWhite.png');
     }
 
     constructor ()
@@ -62,7 +66,7 @@ export class CardMaker extends Scene
         // Reset Data
         this.manager = new CardMakerManager(this);
 
-        const bg = this.add.rectangle(GameLib.screenWidth/2, GameLib.screenHeight/2, GameLib.screenWidth, GameLib.screenHeight, 0xeeeeee);
+        const bg = this.add.rectangle(GameLib.screenWidth/2, GameLib.screenHeight/2, GameLib.screenWidth, GameLib.screenHeight, 0xFEF9F3);
 
         this.buttonClose = new CloseButton(this,100, 100).setScale(0.5);
         this.buttonClose.onPressedCallback = ()=>{
@@ -103,24 +107,18 @@ export class CardMaker extends Scene
         this.hammerBar = new HammerBar(this,GameLib.midX,200);
         this.forgeBar = new ForgeBar(this,GameLib.midX,350);
         this.forgeBottomContainer = new ForgeBottomContainer(this,GameLib.midX,GameLib.quater3Y);
-
+        
+        // State [Prepare] Events
         this.events.on('open-panel',()=>{
             if( this.currentForgeState == 'prepare' ){
                 this.setForgeState('select');
             }
         })
-
+        
+        // State [Forge] Events
         this.events.on('forge-answered',()=>{
             if( this.currentForgeState == 'forge' ){
                 this.forgeBottomContainer.clearChoices();
-                // Render all corresponding UI
-                // this.updateDebugText();
-                // this.forgeBar.updateProgressBar();
-                // this.hammerBar.renderHammer();
-
-                // this.nextForge();
-
-                // TEMP NO USE THIS
             }
         })
 
@@ -144,6 +142,12 @@ export class CardMaker extends Scene
         this.renderDebug();
         
         this.setForgeState('prepare');
+
+        // Prepare > 
+        // Ready > 
+        // SelectCard >
+        // CardReady
+        // Forge
 
         EventBus.emit('current-scene-ready', this);
     }
@@ -256,6 +260,7 @@ export class CardMaker extends Scene
 
         // Continue if still not win or lose
         this.forgeBottomContainer.generateNext();
+        this.mainCircle.updateForgeNextRound()
     }
 
     updateDebugText(){

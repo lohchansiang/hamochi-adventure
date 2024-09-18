@@ -1,6 +1,8 @@
+import SpriteButton from "@/lib/components/SpriteButton"
 import GameLib from "@/lib/GameLib"
 import { Vocab } from "@/lib/repos/DeckRepo"
 import { GameObjects, Scene, Tweens, Types } from "phaser"
+import VocabAudioPlayer from "../VocabAudioPlayer"
 
 export class VocabCardConfig{
     withForgeCondition: boolean = false
@@ -9,7 +11,8 @@ export class VocabCardConfig{
 export default class VocabCard{
 
     static preload( scene: Phaser.Scene ){
-        
+        //
+
     }
 
     scene: Scene
@@ -34,7 +37,9 @@ export default class VocabCard{
     //
     canSelect: boolean = false
     tweenPulse: Tweens.Tween
-
+    //
+    audioPlayer: VocabAudioPlayer
+    //
     constructor( scene:Scene, x:number, y:number, width:number, height:number, vocab:Vocab, config: VocabCardConfig = new VocabCardConfig() ){
         this.scene = scene;
         this.width = width
@@ -115,6 +120,10 @@ export default class VocabCard{
             }).pause();
         }
 
+        this.audioPlayer = new VocabAudioPlayer(scene,width/2,height*0.4,120,vocab);
+        this.container.add(this.audioPlayer.container);
+        this.audioPlayer.container.setVisible(false);
+
         this.setStatus('broken');
     }
 
@@ -134,7 +143,7 @@ export default class VocabCard{
             this.cardSelect.setVisible(false);
         },this);
     }
-
+    
     setStatus( status: string ){
         this.status = status;
 
@@ -189,6 +198,14 @@ export default class VocabCard{
         if( this.canSelect ){
             this.tweenPulse?.play();
         }
+    }
+
+    enableAudio(){
+        this.audioPlayer.container.setVisible(true);
+    }
+
+    disableAudio(){
+        this.audioPlayer.container.setVisible(false);
     }
 
     clean(){

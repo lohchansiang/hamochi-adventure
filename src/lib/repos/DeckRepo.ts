@@ -29,7 +29,7 @@ export class DeckRepo
                     name: 'apple',
                     imagePath: 'fruits/apple.png',
                     textureKey: 'v_fruits_apple',
-                    audio: null,
+                    audio: 'fruits/audios/apple.mp3',
                     wrongAnswers: []
                 },
                 {
@@ -37,7 +37,7 @@ export class DeckRepo
                     name: 'orange',
                     imagePath: 'fruits/orange.png',
                     textureKey: 'v_fruits_orange',
-                    audio: null,
+                    audio: 'fruits/audios/orange.mp3',
                     wrongAnswers: []
                 },
                 {
@@ -45,7 +45,7 @@ export class DeckRepo
                     name: 'banana',
                     imagePath: 'fruits/banana.png',
                     textureKey: 'v_fruits_banana',
-                    audio: null,
+                    audio: 'fruits/audios/banana.mp3',
                     wrongAnswers: []
                 },
                 {
@@ -53,7 +53,7 @@ export class DeckRepo
                     name: 'strawberry',
                     imagePath: 'fruits/strawberry.png',
                     textureKey: 'v_fruits_strawberry',
-                    audio: null,
+                    audio: 'fruits/audios/strawberry.mp3',
                     wrongAnswers: []
                 },
                 {
@@ -61,7 +61,7 @@ export class DeckRepo
                     name: 'watermelon',
                     imagePath: 'fruits/watermelon.png',
                     textureKey: 'v_fruits_watermelon',
-                    audio: null,
+                    audio: 'fruits/audios/watermelon.mp3',
                     wrongAnswers: []
                 },
                 {
@@ -69,7 +69,7 @@ export class DeckRepo
                     name: 'pear',
                     imagePath: 'fruits/pear.png',
                     textureKey: 'v_fruits_pear',
-                    audio: null,
+                    audio: 'fruits/audios/pear.mp3',
                     wrongAnswers: []
                 },
                 {
@@ -77,7 +77,7 @@ export class DeckRepo
                     name: 'kiwi',
                     imagePath: 'fruits/kiwi.png',
                     textureKey: 'v_fruits_kiwi',
-                    audio: null,
+                    audio: 'fruits/audios/kiwi.mp3',
                     wrongAnswers: []
                 },
                 {
@@ -85,7 +85,7 @@ export class DeckRepo
                     name: 'durian',
                     imagePath: 'fruits/durian.png',
                     textureKey: 'v_fruits_durian',
-                    audio: null,
+                    audio: 'fruits/audios/durian.mp3',
                     wrongAnswers: []
                 },
             ]
@@ -106,6 +106,7 @@ export class DeckRepo
 
             deck.vocabs.forEach( ( vocab )=>{
                 scene.load.image(vocab.textureKey,'/assets/adventure/decks/' + vocab.imagePath);
+                scene.load.audio(vocab.textureKey,'/assets/adventure/decks/' + vocab.audio);
             });
         });
     }

@@ -13,6 +13,7 @@ export class MainMenu extends Scene
     //
     testGroundButton: DebugButton
     cardMakerButton: DebugButton
+    demoSaveButton: DebugButton
 
     constructor ()
     {
@@ -34,14 +35,21 @@ export class MainMenu extends Scene
             align: 'center'
         }).setOrigin(0.5).setDepth(100);
 
-        this.testGroundButton = new DebugButton(this,GameLib.screenWidth/2, GameLib.screenHeight/2 + 300, 'Test Ground');
+        this.cardMakerButton = new DebugButton(this,GameLib.screenWidth/2, GameLib.screenHeight/2 + 250, 'Card Maker');
+        this.cardMakerButton.onPressed(()=>{
+            this.scene.start('CardMaker');
+        })
+
+        this.testGroundButton = new DebugButton(this,GameLib.screenWidth/4, GameLib.screenHeight/2 + 480, 'Demo Avatar');
+        this.testGroundButton.setScale(0.6);
         this.testGroundButton.onPressed(()=>{
             this.scene.start('TestGround');
         })
 
-        this.cardMakerButton = new DebugButton(this,GameLib.screenWidth/2, GameLib.screenHeight/2 + 500, 'Card Maker');
-        this.cardMakerButton.onPressed(()=>{
-            this.scene.start('CardMaker');
+        this.demoSaveButton = new DebugButton(this,GameLib.screenWidth/4, GameLib.screenHeight/2 + 600, 'Demo Save');
+        this.demoSaveButton.setScale(0.6);
+        this.demoSaveButton.onPressed(()=>{
+            this.scene.start('DemoSave');
         })
 
         EventBus.emit('current-scene-ready', this);

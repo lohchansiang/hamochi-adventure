@@ -15,7 +15,8 @@ export default class ForgeMaterialText{
     vocab: Vocab 
     //
     container: GameObjects.Container
-    rect: GameObjects.Rectangle
+    outerBase: GameObjects.NineSlice
+    innerBase: GameObjects.NineSlice
     text: GameObjects.Text
     //
 
@@ -28,7 +29,17 @@ export default class ForgeMaterialText{
         this.container = scene.add.container(x,y);
         
         let size:number = 250;
-        this.rect = scene.add.rectangle(0,0,size,size,scene.manager.colorText);
+
+        this.outerBase = scene.add.nineslice(0,0,'panelWhite',0,550,150,50,50,50,50);
+        this.outerBase.setTint(0xFFFFFF);
+
+        this.innerBase = scene.add.nineslice(0,0,'panelWhite',0,550-30,150-30,50,50,50,50);
+        this.innerBase.setTint(scene.manager.colorText);
+
+        this.container.add(this.outerBase);
+        this.container.add(this.innerBase);
+
+
         this.text = scene.add.text(0,0,vocab.name,{ 
                                             fontSize:'32px',
                                             color:'black',
@@ -36,8 +47,6 @@ export default class ForgeMaterialText{
                                             fontFamily:'Arial',
                                             wordWrap: { width: size-20, useAdvancedWrap: true },
                                         }).setOrigin(0.5);
-
-        this.container.add(this.rect);
         this.container.add(this.text);
         
         this.container.setSize(size,size);

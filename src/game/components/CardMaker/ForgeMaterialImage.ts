@@ -15,7 +15,8 @@ export default class ForgeMaterialImage{
     vocab: Vocab 
     //
     container: GameObjects.Container
-    rect: GameObjects.Rectangle
+    outerBase: GameObjects.NineSlice
+    innerBase: GameObjects.NineSlice
     image: GameObjects.Sprite
     //
 
@@ -28,11 +29,18 @@ export default class ForgeMaterialImage{
         this.container = scene.add.container(x,y);
         
         let size:number = 250;
-        this.rect = scene.add.rectangle(0,0,size,size,scene.manager.colorImage);
-        this.image = scene.add.sprite(0,0,vocab.textureKey);
-        this.image.setDisplaySize(size-50,size-50);
+        this.outerBase = scene.add.nineslice(0,0,'panelWhite',0,size,size,50,50,50,50);
+        this.outerBase.setTint(0xFFFFFF);
 
-        this.container.add(this.rect);
+        this.innerBase = scene.add.nineslice(0,0,'panelWhite',0,size-30,size-30,50,50,50,50);
+        this.innerBase.setTint(scene.manager.colorImage);
+
+        this.container.add(this.outerBase);
+        this.container.add(this.innerBase);
+
+        this.image = scene.add.sprite(0,0,vocab.textureKey);
+        this.image.setDisplaySize(size-80,size-80);
+
         this.container.add(this.image);
         
         this.container.setSize(size,size);
