@@ -5,6 +5,7 @@ import { GameObjects, Scene, Types } from "phaser"
 import TabButtonDeck from "./TabButtonDeck"
 import VocabCard from "./VocabCard"
 import CardMakerManager from "../CardMakerManager"
+import SaveManager from "../../SaveManager"
 
 export default class panelSelectedCard{
 
@@ -145,6 +146,8 @@ export default class panelSelectedCard{
             let tabButton:TabButtonDeck = new TabButtonDeck(this.scene,posX,posY,this.tabButtonSize,deck);
             tabButton.onPressCallback = ()=>{
                 this.selectDeckTab(deck.key);
+
+                this.scene.sound.play('lightClick');
             }
 
             this.container.add(tabButton.container);
@@ -198,18 +201,26 @@ export default class panelSelectedCard{
                     this.vocabSizeWidth,
                     this.vocabSizeHeight,
                     vocab,
-                    {withForgeCondition:true}
+                    {withForgeCondition:true,selectedEffect:false}
                 );
                 vocabCard.setInteractive();
                 vocabCard.onPressCallback = ()=>{
                     if( this.onCardSelected ){
                         this.onCardSelected( this.selectedDeckKey, vocab.key )
                     }
+
+                    this.scene.sound.play('forgeSelect');
                     this.close();
                 }
 
                 // Set vocab card status
-                vocabCard.setStatus(this.manager.getVocabStatus(vocab.key));
+                if( this.manager.saveManager.checkIsForgedVocab(vocab.key) ){
+                    vocabCard.setStatus('forged');
+                }else if( this.manager.saveManager.checkIsOwnedVocab(vocab.key) ){
+                    vocabCard.setStatus('owned');
+                }else{
+                    vocabCard.setStatus('none');
+                }
 
                 this.vocabCards.push(vocabCard);
                 this.innerContainer.add(vocabCard.container);

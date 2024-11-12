@@ -40,20 +40,7 @@ export class CardMaker extends Scene
 
     preload ()
     {
-        this.load.image('hammer','assets/adventure/cardmaker/hammer.png')
-        this.load.image('hammerBroke','assets/adventure/cardmaker/hammerBroke.png')
-        this.load.image('forgeFeedbackHit','assets/adventure/cardmaker/forgeFeedbackHit.png')
-        this.load.image('forgeFeedbackSuccess','assets/adventure/cardmaker/forgeFeedbackSuccess.png')
-        this.load.image('forgeFeedbackBulb','assets/adventure/cardmaker/forgeFeedbackBulb.png')
-        this.load.image('forgeAnvil','assets/adventure/cardmaker/forgeAnvil.png')
         //
-        this.load.image('buttonAdd','assets/adventure/cardmaker/buttonAdd.png');
-        this.load.image('buttonCardSelect','assets/adventure/cardmaker/buttonCardSelect.png');
-        this.load.image('vocabAudio','assets/adventure/decks/vocabAudio.png');
-        this.load.image('vocabCardBase','assets/adventure/decks/vocabCardBase.png');
-        this.load.image('vocabCardBaseBack','assets/adventure/decks/vocabCardBack.png');
-        this.load.image('vocabCardCrack','assets/adventure/decks/vocabCardCrack.png');
-        this.load.image('vocabCardWhite','assets/adventure/decks/vocabCardWhite.png');
     }
 
     constructor ()
@@ -93,6 +80,8 @@ export class CardMaker extends Scene
         this.buttonActionForge.onPressedCallback = ()=>{
             if( this.currentForgeState == 'prepare' ){
                 this.setForgeState('forge');
+
+                this.sound.play('forgeStart');
             }
         }
         
@@ -248,8 +237,7 @@ export class CardMaker extends Scene
             new forgeResultSuccess(this,GameLib.midX,GameLib.midY);
 
             // Add To Owned
-            this.manager.addSelectedToOwned();
-            this.manager.resetSelectedVocab();
+            this.manager.handleForgedSuccess();
             return;
         }
         

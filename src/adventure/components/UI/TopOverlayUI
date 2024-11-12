@@ -1,0 +1,16 @@
+import { GameObjects, Scene } from "phaser";
+
+export default class TopOverlayUI{
+    static preload( scene: Scene ){
+    }
+
+    scene: Scene
+    container: GameObjects.Container
+
+    constructor(scene:Scene, x:number, y:number ){
+        this.scene = scene
+        this.container = this.scene.add.container(x,y);
+
+        // Try to
+    }
+}

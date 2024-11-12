@@ -1,4 +1,5 @@
 import { CardMaker } from "@/game/scenes/CardMaker"
+import GameLib from "@/lib/GameLib"
 import { GameObjects, Scene } from "phaser"
 
 export default class forgeFeedbackSuccess{
@@ -11,10 +12,10 @@ export default class forgeFeedbackSuccess{
     oriX: number
     oriY: number
     //
-    hitEffect: GameObjects.Sprite
     container: GameObjects.Container
     sprite: GameObjects.Sprite
     //
+    hitCircle: GameObjects.Arc
 
     constructor( scene:CardMaker, x: number, y: number ){
         this.scene = scene
@@ -29,17 +30,26 @@ export default class forgeFeedbackSuccess{
 
         this.container.add(this.sprite);
         
-        this.hitEffect = scene.add.sprite(x,y,'forgeFeedbackHit');
-        this.hitEffect.setDisplaySize(size,size);
+        this.hitCircle = scene.add.circle(x,y,10,GameLib.colorSuccess,0.5);
 
         this.scene.tweens.add({
-            targets: this.hitEffect,
-            scale: 2,
-            alpha: 0,
-            duration: 1000,
+            targets: this.hitCircle,
+            scale: 30,
+            duration: 800,
             ease: 'Power2',
             onComplete: ()=>{
-                this.hitEffect.destroy();
+                //
+            }
+        })
+
+        this.scene.tweens.add({
+            targets: this.hitCircle,
+            alpha: 0,
+            duration: 500,
+            delay: 500,
+            ease: 'Power2',
+            onComplete: ()=>{
+                this.hitCircle.destroy();
             }
         })
 
@@ -75,5 +85,7 @@ export default class forgeFeedbackSuccess{
                 }
             }
         )
+
+        this.scene.sound.play('forgeSuccess');
     }
 }

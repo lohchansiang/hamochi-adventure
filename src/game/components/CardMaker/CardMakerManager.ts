@@ -1,12 +1,12 @@
 import GameLib from "@/lib/GameLib"
 import { GameObjects, Scene } from "phaser"
 import { Deck, DeckRepo, Vocab } from "@/lib/repos/DeckRepo"
+import SaveManager from "../SaveManager"
 
 export default class CardMakerManager{
 
     scene: Scene
-    owned: string[]
-    broken: string[]
+    saveManager: SaveManager
     //
     selectedDeckKey: string
     selectedVocabKey: string
@@ -27,22 +27,10 @@ export default class CardMakerManager{
 
     constructor(scene:Scene){
         this.scene = scene
-
-        this.broken = ['apple','banana','pear','watermelon'];
-        this.owned = ['apple'];
+        this.saveManager = new SaveManager(scene);
 
         this.resetForgeValues();
         this.resetSelectedVocab();
-    }
-
-    getVocabStatus( vocabKey:string ):string{
-        if( this.owned.includes(vocabKey) ){
-            return 'owned';
-        }else if( this.broken .includes(vocabKey) ){
-            return 'broken';
-        }else{
-            return 'none';
-        }
     }
 
     getTotalTarget():number{
@@ -160,12 +148,6 @@ export default class CardMakerManager{
         return false;
     }
 
-    addSelectedToOwned(){
-        if( this.selectedVocabKey != "" && !this.owned.includes(this.selectedVocabKey) ){
-            this.owned.push(this.selectedVocabKey);
-        }
-    }
-
     getNextKey():string{
         let key:string = 'image';
         if( this.currentText >= this.targetText ){
@@ -177,5 +159,10 @@ export default class CardMakerManager{
         }
 
         return key;
+    }
+
+    handleForgedSuccess(){
+        this.saveManager.addForgedVocab(this.selectedVocabKey);
+        this.resetSelectedVocab();
     }
 }

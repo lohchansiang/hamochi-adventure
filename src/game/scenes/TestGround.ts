@@ -46,6 +46,18 @@ export class TestGround extends Scene
 
         this.playerAvatar = new PlayerAvatar(this,GameLib.screenWidth/2, GameLib.screenHeight/2)
 
+        let title:GameObjects.Text = this.add.text(
+            50,
+            80,
+            'Avatar Demonstration',
+            {
+                color:'black',
+                fontSize: 50,
+                fontFamily:'Arial',
+                fontStyle:'bold',
+                align:'left'
+            });
+
         const backButton = new CloseButton(this,GameLib.screenWidth - 100, 100).setScale(0.5);
         backButton.onPressedCallback = ()=>{
             this.scene.start('MainMenu');

@@ -44,5 +44,7 @@ export default class ForgeFeedbackFailed{
                 this.container.destroy();
             }
         })
+
+        this.scene.sound.play('forgeFailed');
     }
 }

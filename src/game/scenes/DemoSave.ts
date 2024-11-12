@@ -8,6 +8,7 @@ export class DemoSave extends Scene
 {
     saveManager: SaveManager
     //
+    title: GameObjects.Text
     buttonClose: CloseButton
     dataSaveText: GameObjects.Text
     //
@@ -23,7 +24,19 @@ export class DemoSave extends Scene
     {   
         const bg = this.add.rectangle(GameLib.screenWidth/2, GameLib.screenHeight/2, GameLib.screenWidth, GameLib.screenHeight, 0xFEF9F3);
         //
-        this.buttonClose = new CloseButton(this,100, 100).setScale(0.5);
+        this.title = this.add.text(
+            50,
+            80,
+            'Save Data Debug Tool',
+            {
+                color:'black',
+                fontSize: 50,
+                fontFamily:'Arial',
+                fontStyle:'bold',
+                align:'left'
+            });
+
+        this.buttonClose = new CloseButton(this,GameLib.screenWidth - 100, 100).setScale(0.5);
         this.buttonClose.onPressedCallback = ()=>{
             this.scene.start('MainMenu');
         }
@@ -42,15 +55,19 @@ export class DemoSave extends Scene
         
         // 
         this.saveManager = new SaveManager( this );
+        this.renderText();
         //
         this.resetButton = new DebugButton(this,GameLib.screenWidth*0.75, GameLib.screenHeight/2 + 600, 'Reset');
         this.resetButton.setScale(0.6);
         this.resetButton.onPressed(()=>{
             this.saveManager.resetSaveData();
+            this.renderText();
         })
     }
 
-    update(time: number, delta: number): void {
-        this.dataSaveText.setText(this.saveManager.demoGetString());
+    renderText(){
+        if( this.dataSaveText ){
+            this.dataSaveText.setText(JSON.stringify(this.saveManager.playerVocabs));
+        }
     }
 }

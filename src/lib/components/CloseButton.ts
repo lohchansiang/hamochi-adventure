@@ -49,6 +49,7 @@ export default class CloseButton extends Phaser.GameObjects.Container{
 
         if( this.isInitClick && this.onPressedCallback ){
             this.onPressedCallback()
+            this.scene.sound.play('basicClose');
         }
 
         this.isInitClick = false

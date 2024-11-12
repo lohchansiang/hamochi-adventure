@@ -9,6 +9,7 @@ import { TestGround } from './scenes/TestGround';
 import { CardMaker } from './scenes/CardMaker';
 //
 import { DemoSave } from './scenes/DemoSave';
+import { DemoGetCard } from './scenes/DemoGetCard';
 
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
@@ -28,6 +29,7 @@ const config: Phaser.Types.Core.GameConfig = {
         TestGround,
         CardMaker,
         DemoSave,
+        DemoGetCard,
     ],
     scale:{
         mode: Phaser.Scale.FIT,

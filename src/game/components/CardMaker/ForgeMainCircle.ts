@@ -2,7 +2,6 @@ import { CardMaker } from "@/game/scenes/CardMaker"
 import GameLib from "@/lib/GameLib"
 import { GameObjects, Scene, Tweens } from "phaser"
 import VocabCard from "./PanelSelectCard/VocabCard"
-import SpriteButton from "@/lib/components/SpriteButton"
 import { Vocab } from "@/lib/repos/DeckRepo"
 import ForgeFeedbackFailed from "./ForgeFeedbackFailed"
 import forgeFeedbackSuccess from "./ForgeFeedbackSuccess"
@@ -74,6 +73,8 @@ export default class ForgeMainCircle{
         baseSprite.setInteractive();
         baseSprite.on('pointerdown',()=>{
             this.scene.events.emit('open-panel');
+            
+            this.scene.sound.play('lightClick');
         });
 
         baseSprite.on('pointerover',()=>{

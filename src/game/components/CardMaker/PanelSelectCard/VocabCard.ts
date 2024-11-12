@@ -6,6 +6,7 @@ import VocabAudioPlayer from "../VocabAudioPlayer"
 
 export class VocabCardConfig{
     withForgeCondition: boolean = false
+    selectedEffect: boolean = false
 }
 
 export default class VocabCard{
@@ -18,6 +19,7 @@ export default class VocabCard{
     scene: Scene
     width: number
     height: number
+    config: VocabCardConfig
     container: GameObjects.Container
     containerCard: GameObjects.Container
     cardBase: GameObjects.Sprite
@@ -40,11 +42,15 @@ export default class VocabCard{
     //
     audioPlayer: VocabAudioPlayer
     //
+    cardIcon: GameObjects.Container
+    statusText: GameObjects.Text
+
     constructor( scene:Scene, x:number, y:number, width:number, height:number, vocab:Vocab, config: VocabCardConfig = new VocabCardConfig() ){
         this.scene = scene;
         this.width = width
         this.height = height
         this.vocab = vocab;
+        this.config = config
 
         this.container = scene.add.container(x,y);
         this.containerCard = scene.add.container(0,0);
@@ -86,6 +92,20 @@ export default class VocabCard{
         this.container.add(this.containerCard);
         this.container.add(this.cardCrack); 
         
+        this.statusText = this.scene.add.text(
+            0,
+            this.height*0.6,
+            '',
+            {
+                color:'black',
+                fontSize: 24,
+                fontFamily:'Arial',
+                fontStyle:'bold',
+                wordWrap: { width: width, useAdvancedWrap: true },
+                align:'center'
+            }).setOrigin(0.5,0.5)
+        this.container.add(this.statusText);
+
         if( config.withForgeCondition ){
             const iconSize = width*0.35;
             // Icon Owned
@@ -124,7 +144,7 @@ export default class VocabCard{
         this.container.add(this.audioPlayer.container);
         this.audioPlayer.container.setVisible(false);
 
-        this.setStatus('broken');
+        this.setStatus('owned');
     }
 
     setInteractive(){
@@ -132,15 +152,23 @@ export default class VocabCard{
         this.cardBase.on('pointerdown',()=>{
             if( this.onPressCallback && this.canSelect ){
                 this.onPressCallback();
+
+                if( this.config.selectedEffect ){
+                    this.cardSelect.setVisible(true);
+                }
             }
         },this);
 
         this.cardBase.on('pointerover',()=>{
-            this.cardSelect.setVisible(true);
+            if( !this.config.selectedEffect ){
+                this.cardSelect.setVisible(true);
+            }
         },this);
 
         this.cardBase.on('pointerout',()=>{
-            this.cardSelect.setVisible(false);
+            if( !this.config.selectedEffect ){
+                this.cardSelect.setVisible(false);
+            }
         },this);
     }
     
@@ -159,7 +187,7 @@ export default class VocabCard{
         this.tweenPulse?.reset();
 
         switch (status) {
-            case 'owned':
+            case 'forged':
                 this.cardBase.setTexture('vocabCardBase');
                 this.vocabSprite.setVisible(true);
                 this.vocabText.setVisible(true);
@@ -170,7 +198,7 @@ export default class VocabCard{
                 this.containerCard.setAlpha(0.6);
                 this.canSelect = false;
                 break;
-            case 'broken':
+            case 'owned':
                 this.cardBase.setTexture('vocabCardBase');
                 this.vocabText.setVisible(true);
                 this.vocabSprite.setVisible(true);
@@ -214,5 +242,55 @@ export default class VocabCard{
 
     static calculateHeight( width:number ):number{
         return 1360/980*width;
+    }
+
+    setSelected( isSelected:boolean ){
+        if( isSelected ){
+            this.cardSelect.setVisible(true);
+        }else{
+            this.cardSelect.setVisible(false);
+        }
+    }
+
+    setIcon( key:string, color:number ){
+        const iconSize = this.width*0.35;
+        
+        if(this.cardIcon) this.cardIcon.destroy();
+
+        let spriteKey: string|null = null;
+
+        switch ( key ) {
+            case 'cross':
+                spriteKey = 'iconCross';
+                break;
+            case 'tick':
+                spriteKey = 'iconTick';
+                break;
+            default:
+                break;
+        }
+
+        if( spriteKey ){
+            this.cardIcon = this.scene.add.container(this.width*0.4,this.height*0.4);
+            let baseCircle:GameObjects.Arc = this.scene.add.circle(0,0,iconSize/2,0xeeeeee).setStrokeStyle(2,0x000000);
+            let icon:GameObjects.Sprite = this.scene.add.sprite(0,0,spriteKey);
+            baseCircle.fillColor = color;
+            icon.setDisplaySize(40,40);
+            this.cardIcon.add(baseCircle);
+            this.cardIcon.add(icon);
+
+            this.container.add(this.cardIcon);
+        }
+    }
+
+    clearIcon( key:string ){
+        this.cardIcon.destroy();
+    }
+
+    setStatusText( status:string, color:string = "black" ){
+        if( this.statusText ){
+            this.statusText.setText(status);
+            this.statusText.setColor(color);
+        }
     }
 }

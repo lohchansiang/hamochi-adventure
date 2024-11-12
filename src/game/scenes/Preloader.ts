@@ -81,7 +81,30 @@ export class Preloader extends Scene
         this.load.image('iconPlay','/adventure/icons/iconPlay.png');
 
         this.load.image('buttonCircleAction','/adventure/components/buttonCircle.png');
+        //
+        this.load.image('hammer','/adventure/cardmaker/hammer.png')
+        this.load.image('hammerBroke','/adventure/cardmaker/hammerBroke.png')
+        this.load.image('forgeFeedbackHit','/adventure/cardmaker/forgeFeedbackHit.png')
+        this.load.image('forgeFeedbackSuccess','/adventure/cardmaker/forgeFeedbackSuccess.png')
+        this.load.image('forgeFeedbackBulb','/adventure/cardmaker/forgeFeedbackBulb.png')
+        this.load.image('forgeAnvil','/adventure/cardmaker/forgeAnvil.png')
+        //
+        this.load.image('buttonAdd','/adventure/cardmaker/buttonAdd.png');
+        this.load.image('buttonCardSelect','/adventure/cardmaker/buttonCardSelect.png');
+        //
+        this.load.image('vocabAudio','/adventure/decks/vocabAudio.png');
+        this.load.image('vocabCardBase','/adventure/decks/vocabCardBase.png');
+        this.load.image('vocabCardBaseBack','/adventure/decks/vocabCardBack.png');
+        this.load.image('vocabCardCrack','/adventure/decks/vocabCardCrack.png');
+        this.load.image('vocabCardWhite','/adventure/decks/vocabCardWhite.png');
 
+        // Audio
+        this.load.audio('forgeSuccess','/adventure/audio/forgeSuccess.mp3');
+        this.load.audio('forgeFailed','/adventure/audio/forgeFailed.mp3');
+        this.load.audio('lightClick','/adventure/audio/lightClick.mp3');
+        this.load.audio('basicClose','/adventure/audio/basicClose.mp3');
+        this.load.audio('forgeSelect','/adventure/audio/forgeSelect.mp3');
+        this.load.audio('forgeStart','/adventure/audio/forgeStart.mp3');
     }
 
     create ()
