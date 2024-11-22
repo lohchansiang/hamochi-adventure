@@ -3,9 +3,9 @@ import { Scene } from 'phaser';
 import CloseButton from '@/lib/components/CloseButton';
 import PlayerAvatar from '../components/Player/PlayerAvatar';
 import BasicButton from '@/lib/components/BasicButton';
-import FlexMap from '../components/Map/FlexMap';
 import UIMoveSlider from '../components/Player/UIMoveSlider';
-import FixedMap from '../components/Map/FixedMap';
+import UIMoveControl from '../components/Player/UIMoveControl';
+import MapBase from '../components/Map/MapBase';
 
 export class Preloader extends Scene
 {
@@ -38,9 +38,10 @@ export class Preloader extends Scene
     preload ()
     {
         // Load For Adventures
-        FixedMap.preload(this);
+        MapBase.preload(this);
         UIMoveSlider.preload(this);
-
+        UIMoveControl.preload(this);
+        
         // Load Lib Component
         RectButton.preload(this);
         BasicButton.preload(this);

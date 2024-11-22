@@ -1,6 +1,6 @@
 import GameLib from "@/lib/GameLib";
 import { GameObjects, Scene } from "phaser";
-import { MoveState } from "./PlayerEnum";
+import { InputMovement } from "./PlayerEnum";
 
 export default class UIMoveSlider{
     static preload( scene: Scene ){
@@ -18,7 +18,7 @@ export default class UIMoveSlider{
     trackSprite: GameObjects.Sprite
     //
     fixedPoints: Array<number>
-    moveState: MoveState
+    inputMovement: InputMovement
     //
     
     constructor(scene:Scene,x:number,y:number){
@@ -82,11 +82,16 @@ export default class UIMoveSlider{
 
     updateMoveState(){
         if( this.handleSprite.x > this.trackWidth/4 ){
-            this.moveState = MoveState.RIGHT;
+            this.inputMovement = InputMovement.RIGHT;
         }else if( this.handleSprite.x < -this.trackWidth/4){
-            this.moveState = MoveState.LEFT;
+            this.inputMovement = InputMovement.LEFT;
         }else{
-            this.moveState = MoveState.IDLE;
+            this.inputMovement = InputMovement.NONE;
         }
+    }
+
+    stop(){
+        this.handleSprite.x = 0;
+        this.updateMoveState();
     }
 }

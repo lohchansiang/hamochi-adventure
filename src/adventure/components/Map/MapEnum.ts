@@ -12,9 +12,13 @@ export enum ViewPosition{
     Q3
 }
 
-export enum MoveMode{
-    NONE,
-    MAP,
-    AVATAR,
+export enum MoveDirection{
+    FORWARD,
+    BACKWARD,
+}
+
+export enum MoveState{
+    STOP,
+    MOVING,
     BLOCKED
 }

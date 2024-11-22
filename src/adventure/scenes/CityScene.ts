@@ -4,10 +4,13 @@ import GameLib from '@/lib/GameLib';
 import UIMoveSlider from '../components/Player/UIMoveSlider';
 import PlayerAvatar from '../components/Player/PlayerAvatar';
 import ViewPosController from '../components/Map/ViewPosController';
-import FixedMap from '../components/Map/FixedMap';
-import { MapPosition } from '../components/Map/MapEnum';
-import { AvatarState, MoveState } from '../components/Player/PlayerEnum';
+import { InputMovement, PlayerAttribute } from '../components/Player/PlayerEnum';
 import PlayerController from '../components/Player/PlayerController';
+import TopOverlayUI from '../components/UI/TopOverlayUI';
+import UIMoveControl from '../components/Player/UIMoveControl';
+import DebugButton from '@/lib/components/DebugButton';
+import MapStartVillage from '../maps/MapStartVillage';
+import MapMini from '../components/Map/MapMini';
 
 export class CityScene extends Scene
 {
@@ -16,18 +19,28 @@ export class CityScene extends Scene
     camera: Phaser.Cameras.Scene2D.Camera;
     worldContainer: GameObjects.Container
     moveSlider: UIMoveSlider
+    moveControl: UIMoveControl
     viewPosController: ViewPosController
     playerController: PlayerController
     //
-    fixedMap: FixedMap
+    map: MapStartVillage
     playerAvatar: PlayerAvatar
     //
     bottomPanelBorder: GameObjects.Rectangle
     bottomPanel: GameObjects.Rectangle
+    // UI
+    topUI: TopOverlayUI
+    mapMini: MapMini
     //
     debugText: GameObjects.Text
     //
-    speed: number = 10
+    // Player Attribute
+    playerAttribute: PlayerAttribute
+    //
+    // Debug Button
+    buttonSelectSlider: DebugButton
+    buttonSelectArrow: DebugButton
+    activeControl: string
 
     preload(){
         this.load.setPath('assets');
@@ -49,17 +62,22 @@ export class CityScene extends Scene
         this.camera = this.cameras.main
         this.camera.setBackgroundColor(0xffffff);
 
+        // Init
+        this.playerAttribute = {
+            moveSpeed: 14,
+        }
+
         // Prepare World Container
         this.worldContainer = this.add.container(GameLib.midX,1080);
 
         // Render Map
-        this.fixedMap = new FixedMap(this,0,0);
-        this.worldContainer.add(this.fixedMap.container);
+        this.map = new MapStartVillage(this,0,0);
+        this.worldContainer.add(this.map.container);
 
         // Render Avatar
         this.playerAvatar = new PlayerAvatar( this, 0, -150);
         this.playerAvatar.setScale(0.4);
-        this.worldContainer.add(this.playerAvatar)
+        this.map.layerPlayer.add(this.playerAvatar);
 
         this.viewPosController = new ViewPosController(this,this.worldContainer);
         this.playerController = new PlayerController(this,this.playerAvatar);
@@ -72,29 +90,69 @@ export class CityScene extends Scene
 
         // Create Player Controller and Link to Avatar
         this.moveSlider = new UIMoveSlider( this, GameLib.midX, GameLib.screenHeight - 300 );
+        this.moveSlider.container.setVisible(false);
+
+        this.moveControl = new UIMoveControl( this, GameLib.midX, GameLib.screenHeight - 300 ); 
+        this.moveControl.container.setVisible(false);
+
+        // Ccntrol Selector
+        this.selectControlType('arrow');
+
+        this.buttonSelectArrow = new DebugButton( this, 200, GameLib.quater3Y - 300, 'Use Arrow').setScale(0.5);
+        this.buttonSelectArrow.onPressedCallback = ()=>{
+            this.selectControlType('arrow');
+        };
+        this.buttonSelectSlider = new DebugButton( this, 200, GameLib.quater3Y - 200, 'Use Slider').setScale(0.5);
+        this.buttonSelectSlider.onPressedCallback = ()=>{
+            this.selectControlType('slider');
+        };
+
+        // Render UI
+        this.topUI = new TopOverlayUI( this, GameLib.midX, GameLib.quaterY );
+
+        this.mapMini = new MapMini(this,GameLib.midX, 100);
+        this.mapMini.renderBuildings( this.map.backEntityList, this.map.mapLength );
 
         EventBus.emit('current-scene-ready', this);
     }
 
-    calculateDeltaX():number {
-        if( this.moveSlider.moveState == MoveState.RIGHT ){
-            return this.speed;
-        }else if( this.moveSlider.moveState == MoveState.LEFT ){
-            return -this.speed;
-        }else{
-            return 0;
+    selectControlType( controlKey:string ){
+        if( controlKey != this.activeControl ){
+            this.activeControl = controlKey;
+            this.moveSlider.stop();
+            if( controlKey == 'arrow' ){
+                this.moveControl.container.setVisible(true);
+                this.moveSlider.container.setVisible(false);
+            }else if( controlKey == 'slider' ){
+                this.moveControl.container.setVisible(false);
+                this.moveSlider.container.setVisible(true);
+            }
         }
     }
 
+    _getActiveInputMovement():InputMovement{
+        if( this.activeControl == 'slider' ){
+            return this.moveSlider.inputMovement;
+        }else if( this.activeControl == 'arrow' ){
+            return this.moveControl.inputMovement;
+        }
+
+        return InputMovement.NONE;
+    }
+
     update(){
-        let deltaX:number = this.calculateDeltaX();
         // Process
-        this.viewPosController.update( this.moveSlider.moveState, this.fixedMap.getMapPosition() );
-        this.fixedMap.update( deltaX );
-        this.playerController.update( this.fixedMap.getModeMode(), deltaX );
+        let inputMovement: InputMovement = this._getActiveInputMovement();
+
+        this.map.update( inputMovement, this.playerAttribute.moveSpeed );
+        this.viewPosController.update( inputMovement, this.map.currentMapPosition );
+        
+        // Set Player Position Based on map current X
+        this.playerController.update( this.map.getAvatarMoveData() );
+        this.mapMini.update( this.map.currentX, this.map.mapLength );
 
         if( this.debugText ){
-            this.debugText.setText(this.fixedMap.getMovedX().toString() + " / " + this.fixedMap.getMovableLength().toString());
+            this.debugText.setText(this.map.getMovedX().toString() + " / " + this.map.getMovableLength().toString());
         }
     }
 }

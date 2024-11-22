@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST="{\"pages/adventure/index.tsx -> @/AppAdventure\":{\"id\":\"pages/adventure/index.tsx -> @/AppAdventure\",\"files\":[\"static/chunks/src_AppAdventure_tsx.js\"]},\"pages/index.tsx -> @/App\":{\"id\":\"pages/index.tsx -> @/App\",\"files\":[\"static/chunks/src_App_tsx.js\"]}}"
+self.__REACT_LOADABLE_MANIFEST="{\"pages/adventure/index.tsx -> @/AppAdventure\":{\"id\":\"pages/adventure/index.tsx -> @/AppAdventure\",\"files\":[\"static/chunks/src_AppAdventure_tsx.js\"]}}"

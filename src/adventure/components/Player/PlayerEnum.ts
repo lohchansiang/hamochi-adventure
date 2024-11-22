@@ -1,10 +1,12 @@
-
+export class PlayerAttribute{
+    moveSpeed: number
+}
 
 // MoveState > Output from moveSlider or player input UI
-export enum MoveState{
+export enum InputMovement{
     LEFT,
     RIGHT,
-    IDLE
+    NONE
 }
 
 // Avatar State > Avatar animation ['none','idle','walk','jump','midair','fall','hurt','faint','attack']

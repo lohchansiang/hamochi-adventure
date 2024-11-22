@@ -1,7 +1,7 @@
 import { GameObjects, Scene, Tweens } from "phaser";
 import GameLib from "@/lib/GameLib";
 import { MapPosition, ViewPosition } from "./MapEnum";
-import { MoveState } from "../Player/PlayerEnum";
+import { InputMovement } from "../Player/PlayerEnum";
 
 export default class ViewPosController{
     static preload( scene: Scene ){
@@ -11,11 +11,11 @@ export default class ViewPosController{
     scene: Scene
     world: GameObjects.Container
     //
-    currentMoveState: MoveState
     waitTime: number
-    targetWaitTime: number = 80 // Time waited to change camera position
+    targetWaitTime: number = 50 // Time waited to change camera position
     viewPosition: ViewPosition
-
+    //
+    currentInputMovement: InputMovement
     // Callback
 
     constructor(scene:Scene, world:GameObjects.Container){
@@ -26,7 +26,7 @@ export default class ViewPosController{
         this.moveViewPosition(ViewPosition.Q2);
     }
 
-    update( moveState: MoveState,mapPos: MapPosition ){
+    update( inputMovement: InputMovement,mapPos: MapPosition ){
         // If reach start, force to left side
         if( mapPos == MapPosition.START ){ 
             this.moveViewPosition(ViewPosition.Q3);
@@ -37,12 +37,12 @@ export default class ViewPosController{
             return;
         }
 
-        if( moveState == MoveState.IDLE ) return;
+        if( inputMovement == InputMovement.NONE ) return;
 
         // Player avatar move based on avatar facing, middle
-        if( this.currentMoveState != moveState ){
+        if( this.currentInputMovement != inputMovement ){
             // Reset 
-            this.currentMoveState = moveState;
+            this.currentInputMovement = inputMovement;
             this.waitTime = 0;
             //
             this.moveViewPosition(ViewPosition.Q2);
@@ -50,9 +50,9 @@ export default class ViewPosController{
             if( this.waitTime < this.targetWaitTime ){
                 this.waitTime += 1;
                 if( this.waitTime == this.targetWaitTime ){
-                    if( moveState == MoveState.LEFT ){
+                    if( inputMovement == InputMovement.LEFT ){
                         this.moveViewPosition(ViewPosition.Q3);
-                    }else if( moveState == MoveState.RIGHT ){
+                    }else if( inputMovement == InputMovement.RIGHT ){
                         this.moveViewPosition(ViewPosition.Q1);
                     }
                 }
