@@ -20,7 +20,9 @@ export enum AvatarState{
     HURT,
     FAINT,
     ATTACK,
-    PUSH
+    PUSH,
+    HIDDEN,
+    APPEAR,
 }
 
 // Avatar Mask > Overwrite face expression ['none','smile','laugh','smileEye','laughEye','star','angry','mad','cry','nervous','shout','pain','dizzy']

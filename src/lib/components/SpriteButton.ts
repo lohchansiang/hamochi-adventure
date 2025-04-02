@@ -39,14 +39,14 @@ export default class SpriteButton extends Phaser.GameObjects.Container{
         this.buttonSprite.on('pointerout',this.onOut,this);
     }
 
-    onDown(){
+    private onDown(){
         if( this.isDisabled ) return
 
         this.buttonSprite.setScale(1.0)
         this.isInitClick = true
     }
 
-    onUp(){
+    private onUp(){
         if( this.isDisabled ) return
 
         this.buttonSprite.setScale(1.0)
@@ -57,20 +57,20 @@ export default class SpriteButton extends Phaser.GameObjects.Container{
         this.isInitClick = false
     }
 
-    onOut(){
+    private onOut(){
         if( this.isDisabled ) return
 
         this.buttonSprite.setScale(1.0)
         this.isInitClick = false
     }
 
-    onHover(){
+    private onHover(){
         if( this.isDisabled ) return
 
         this.buttonSprite.setScale(1.1)
     }
 
-    onPressed( callback: Function ){
+    private onPressed( callback: Function ){
         this.onPressedCallback = callback
     }
 

@@ -1,6 +1,6 @@
 import GameLib from "@/lib/GameLib";
 import { GameObjects, Scene } from "phaser";
-import { MapEntity } from "./MapEntities";
+import MapEntity from "./MapEntity";
 
 export default class MapMini{
 
@@ -8,21 +8,21 @@ export default class MapMini{
         scene.load.image("endFlagSmall", "assets/adventure/game/endFlagSmall.png");
     }
 
-    scene: Scene
+    private scene: Scene
     //
-    containter: GameObjects.Container
-    buildingContainer: GameObjects.Container
+    private containter: GameObjects.Container
+    private buildingContainer: GameObjects.Container
     //
-    width: number = GameLib.screenWidth-140
-    height: number = 10
-    startX: number
-    endX: number
+    private width: number = GameLib.screenWidth-140
+    private height: number = 10
+    private startX: number
+    private endX: number
     //
-    bar: GameObjects.Rectangle
-    sideStart: GameObjects.Rectangle
-    sideEnd: GameObjects.Rectangle
-    background: GameObjects.Rectangle
-    avatarIcon: GameObjects.Rectangle
+    private bar: GameObjects.Rectangle
+    private sideStart: GameObjects.Rectangle
+    private sideEnd: GameObjects.Rectangle
+    private background: GameObjects.Rectangle
+    private avatarIcon: GameObjects.Rectangle
     
     constructor( scene:Scene, x: number, y: number ){
         this.scene = scene
@@ -49,10 +49,11 @@ export default class MapMini{
         this.containter.add(this.avatarIcon);
     }
 
+    // Render Map Dots
     renderBuildings( entityList:Array<MapEntity>, maxLength: number  ){
         entityList.forEach( (entity)=>{
-            if( entity.type == 'building' ){
-                let positionX:number = this.startX + (entity.x / maxLength * this.width);
+            if( entity.isMiniMap() ){
+                let positionX:number = this.startX + (entity.getContainer().x / maxLength * this.width);
 
                 let rect: GameObjects.Rectangle = this.scene.add.rectangle(positionX,-10,20,40,0xff0000).setOrigin(0.5,1);
                 this.buildingContainer.add(rect);

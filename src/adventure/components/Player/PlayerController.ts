@@ -10,12 +10,16 @@ export class AvatarMoveData{
 }
 
 export default class PlayerController{
+    /**
+     * PlayerController
+     * - Control player avatar sprite, emoji, animation when move / action
+     */
     static preload( scene: Scene ){
        //
     }
 
-    scene: Scene
-    avatar: PlayerAvatar
+    private scene: Scene
+    private avatar: PlayerAvatar
 
     constructor(scene:Scene, avatar: PlayerAvatar){
         this.scene = scene
@@ -39,7 +43,38 @@ export default class PlayerController{
                 this.avatar.setEmojiMask( AvatarMask.NONE );
             }
 
-            this.avatar.x = avatarData.x;
+            this.avatar.setPositionX(avatarData.x); 
+        }
+    }
+
+    enterFromSide( avatarData: AvatarMoveData, entryType: string, callback?: Function ){
+        if( avatarData ){
+            let distance:number = 1000;
+            if( entryType == 'right' ){
+                this.avatar.setPositionX(avatarData.x + distance); 
+                this.avatar.setDirection(-1);
+            }else{
+                this.avatar.setPositionX(avatarData.x - distance); 
+                this.avatar.setDirection(1);
+            }
+
+            this.avatar.setAvatarState(AvatarState.WALK);
+
+            this.scene.tweens.add({
+                targets: this.avatar.getContainer(),
+                x: avatarData.x,
+                duration: 1000, 
+                ease: 'Linear',
+                repeat: 0, 
+                yoyo: false,
+                onComplete: ()=>{
+                    this.avatar.setAvatarState(AvatarState.IDLE);
+
+                    if( callback ){
+                        callback();
+                    }
+                } 
+            });
         }
     }
 }

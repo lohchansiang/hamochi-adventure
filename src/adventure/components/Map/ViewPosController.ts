@@ -4,18 +4,28 @@ import { MapPosition, ViewPosition } from "./MapEnum";
 import { InputMovement } from "../Player/PlayerEnum";
 
 export default class ViewPosController{
+
+    /**
+     * Act like camera
+     * - Move world position center point based on avatar direction and movement
+     * - 3 View Positions
+     *      - Q1 > Left
+     *      - Q2 > Middle
+     *      - Q3 > Right
+     */
+    
     static preload( scene: Scene ){
        //
     }
 
-    scene: Scene
-    world: GameObjects.Container
+    private scene: Scene
+    private world: GameObjects.Container
     //
-    waitTime: number
-    targetWaitTime: number = 50 // Time waited to change camera position
-    viewPosition: ViewPosition
+    private waitTime: number
+    private targetWaitTime: number = 50 // Time waited to change camera position
+    private viewPosition: ViewPosition
     //
-    currentInputMovement: InputMovement
+    private currentInputMovement: InputMovement
     // Callback
 
     constructor(scene:Scene, world:GameObjects.Container){
@@ -60,7 +70,20 @@ export default class ViewPosController{
         }
     }
 
-    moveViewPosition( newViewPos: ViewPosition ){
+    forceMoveViewPosition( mapPos: MapPosition ){
+        if( mapPos == MapPosition.START ){ 
+            this.moveViewPosition(ViewPosition.Q3);
+            return;
+        };
+        if( mapPos == MapPosition.END ){
+            this.moveViewPosition(ViewPosition.Q1);
+            return;
+        }
+
+        this.moveViewPosition(ViewPosition.Q2);
+    }
+
+    private moveViewPosition( newViewPos: ViewPosition ){
         if( this.viewPosition == newViewPos ) return;
 
         let toMove: boolean = false;

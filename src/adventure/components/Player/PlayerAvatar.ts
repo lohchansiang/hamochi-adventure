@@ -1,7 +1,7 @@
 import { GameObjects, Scene, Tweens } from "phaser";
 import { AvatarMask, AvatarState } from "./PlayerEnum";
 
-export default class PlayerAvatar extends GameObjects.Container{
+export default class PlayerAvatar{
     static preload( scene: Scene ){
         scene.load.image("avatarBase", "assets/adventure/components/avatar/CB0030_hamster.png");
         scene.load.image("avatarBaseStroke", "assets/adventure/components/avatar/CB0030_hamster_stroke.png");
@@ -27,48 +27,47 @@ export default class PlayerAvatar extends GameObjects.Container{
         scene.load.spritesheet('spritesheetMaskFaint', 'assets/adventure/components/mask/SpritesheetMaskFaint.png', { frameWidth: 500, frameHeight: 600 });
     }
 
-    scene: Scene
-    width:number = 300
-    height:number = 500
-    oriX: number
-    oriY: number
+    private scene: Scene
+    private width:number = 300
+    private height:number = 500
+    private oriX: number
+    private oriY: number
     //
-    avatarContainer: GameObjects.Container
-    base: GameObjects.Sprite
-    baseStroke: GameObjects.Sprite
-    eye: GameObjects.Sprite
-    hair: GameObjects.Sprite
-    mouth: GameObjects.Sprite
-    cheek: GameObjects.Sprite
-    shadow: GameObjects.Sprite
+    private container: GameObjects.Container
+    private avatarContainer: GameObjects.Container
+    private base: GameObjects.Sprite
+    private baseStroke: GameObjects.Sprite
+    private eye: GameObjects.Sprite
+    private hair: GameObjects.Sprite
+    private mouth: GameObjects.Sprite
+    private cheek: GameObjects.Sprite
+    private shadow: GameObjects.Sprite
     // Mask
-    emojiMask: GameObjects.Sprite
+    private emojiMask: GameObjects.Sprite
     // Groups
-    groupFace: GameObjects.Group
+    private groupFace: GameObjects.Group
     // States
-    currentAvatarState: AvatarState
-    currentAvatarMask: AvatarMask
+    private currentAvatarState: AvatarState
+    private currentAvatarMask: AvatarMask
     // Animations
-    tweenIdle: Tweens.Tween
-    tweenIdleShadow: Tweens.Tween
-    tweenWalk: Tweens.Tween
-    tweenWalkShadow: Tweens.Tween
-    tweenJump: Tweens.TweenChain
-    tweenJumpShadow: Tweens.Tween
-    tweenFall: Tweens.TweenChain
-    tweenFallShadow: Tweens.Tween
+    private tweenIdle: Tweens.Tween
+    private tweenIdleShadow: Tweens.Tween
+    private tweenWalk: Tweens.Tween
+    private tweenWalkShadow: Tweens.Tween
+    private tweenJump: Tweens.TweenChain
+    private tweenJumpShadow: Tweens.Tween
+    private tweenFall: Tweens.TweenChain
+    private tweenFallShadow: Tweens.Tween
     
-
     constructor(scene:Scene, x: number, y: number ){
-        super(scene, x, y);
-       
-        this.oriX = x
-        this.oriY = y
+        this.scene = scene;
+        this.oriX = x;
+        this.oriY = y;
 
-        scene.add.existing(this);
+        this.container = this.scene.add.container(x,y);
 
         this.avatarContainer = scene.add.container(0,0);
-        this.add(this.avatarContainer);
+        this.container.add(this.avatarContainer);
 
         this.base = scene.add.sprite(0,0,'avatarBase').setTint(0xFFD48A).setOrigin(0.5,1);
         this.baseStroke = scene.add.sprite(0,0,'avatarBaseStroke').setOrigin(0.5,1);
@@ -89,8 +88,8 @@ export default class PlayerAvatar extends GameObjects.Container{
         this.groupFace.add(this.eye);
         this.groupFace.add(this.mouth);
 
-        this.add(this.shadow);
-        this.sendToBack(this.shadow);
+        this.container.add(this.shadow);
+        this.container.sendToBack(this.shadow);
 
         this.emojiMask = scene.add.sprite(0,0,'maskPain').setOrigin(0.5,1).setVisible(false);
         this.avatarContainer.add(this.emojiMask);
@@ -100,7 +99,7 @@ export default class PlayerAvatar extends GameObjects.Container{
         this.setAvatarState(AvatarState.WALK);
     }
 
-    prepareAnims(){
+   private prepareAnims(){
         // Blink Animation
         this.eye.anims.create({
             key: 'blink',
@@ -362,12 +361,46 @@ export default class PlayerAvatar extends GameObjects.Container{
 
                 this.currentAvatarState = newState
                 break;
+            case AvatarState.HIDDEN:
+                this.scene.tweens.add({
+                    targets: [this.avatarContainer, this.shadow],
+                    alpha: 0,
+                    ease: 'Linear',       // 'Cubic', 'Elastic', 'Bounce', 'Back'
+                    duration: 500,
+                    onStart:()=>{
+                        this.avatarContainer.alpha = 1
+                        this.shadow.alpha = 1
+                    }
+                });
+
+                // Eye Blink
+                this.eye.play('blink');
+
+                this.currentAvatarState = newState
+                break;
+            case AvatarState.APPEAR:
+                this.scene.tweens.add({
+                    targets: [this.avatarContainer, this.shadow],
+                    alpha: 1,
+                    ease: 'Linear',       // 'Cubic', 'Elastic', 'Bounce', 'Back'
+                    duration: 500,
+                    onStart:()=>{
+                        this.avatarContainer.alpha = 0
+                        this.shadow.alpha = 0
+                    }
+                });
+
+                // Eye Blink
+                this.eye.play('blink');
+
+                this.currentAvatarState = newState
+                break;
             default:
                 break;
         }
     }
 
-    stopCurrentState(){
+    private stopCurrentState(){
         switch (this.currentAvatarState) {
             case AvatarState.IDLE:
                 //
@@ -433,6 +466,18 @@ export default class PlayerAvatar extends GameObjects.Container{
                 this.avatarContainer.scale = 1;
                 this.shadow.scaleX = 1;
                 this.clearEmojiMask();
+
+                this.currentAvatarState = AvatarState.NONE;
+                break;
+            case AvatarState.HIDDEN:
+                this.eye.stop();
+                this.eye.setTexture('avatarEye0');
+
+                this.currentAvatarState = AvatarState.NONE;
+                break;
+            case AvatarState.APPEAR:
+                this.eye.stop();
+                this.eye.setTexture('avatarEye0');
 
                 this.currentAvatarState = AvatarState.NONE;
                 break;
@@ -559,7 +604,7 @@ export default class PlayerAvatar extends GameObjects.Container{
         }
     }
 
-    clearEmojiMask(){
+    private clearEmojiMask(){
         
         switch ( this.currentAvatarMask ) {
             case AvatarMask.NERVOUS:
@@ -603,5 +648,13 @@ export default class PlayerAvatar extends GameObjects.Container{
 
     clean(){
         //
+    }
+
+    setPositionX( x:number ){
+        this.container.x = x
+    }
+
+    getContainer(){
+        return this.container;
     }
 }

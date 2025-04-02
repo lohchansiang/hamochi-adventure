@@ -5,8 +5,8 @@ export default class TopOverlayUI{
     static preload( scene: Scene ){
     }
 
-    scene: Scene
-    container: GameObjects.Container
+    private scene: Scene
+    private container: GameObjects.Container
     //
     // titleContainer: GameObjects.Container
     // titleText: GameObjects.Text
@@ -14,7 +14,7 @@ export default class TopOverlayUI{
 
     constructor(scene:Scene, x:number, y:number ){
         this.scene = scene
-        this.container = this.scene.add.container(x,y);
+        this.container = this.scene.add.container(x,y).setDepth(1000);
 
         // Debug Container
         // let rect = this.scene.add.rectangle(0,0,GameLib.screenWidth-50,1000,0x000000,0.2).setOrigin(0.5,0.5);

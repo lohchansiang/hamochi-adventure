@@ -1,127 +1,118 @@
-import GameLib from "@/lib/GameLib";
-import { GameObjects, Scene, Tweens } from "phaser";
-import { MapObjectRepo } from "@/lib/repos/MapObjectRepo";
-
-export class MapEntity {
-    type: string // deco, building
-    mapObjectKey: string
-    x: number
-    y: number
-    collisionRange: number
-    showCollision?: boolean = false
-    title? : string
-    //
-    objectContainer? : GameObjects.Container
-    titleContainer? : GameObjects.Container
-    glowContainer?: GameObjects.Container
-}
+import { GameObjects, Scene } from "phaser";
+import { MapObject, MapObjectRepo } from "@/adventure/repos/MapObjectRepo";
+import { QuickDebug } from "../Singleton/QuickDebug";
+import MapEntity from "./MapEntity";
+import MapEntityConfig from "./MapEntityConfigs/MapEntityConfig";
 
 export default class MapEntities{
+    /**
+     * Act as layers of MapEntities (Building/ Decoration)
+     * - 2 Layers
+     *  - Front layer > just decoration
+     *  - Back layer > can interact - such as building and teleports
+     * - renter entities 
+     */
+
     // Sidescrolling Map
-    scene: Scene
-    container: GameObjects.Container
+    private scene: Scene
+    private container: GameObjects.Container
+    private quickDebug: QuickDebug
     //
-    offsetY: number = -120
-    //
-    entityList: Array<MapEntity> 
-    collided: Array<string>
+    private entityList: Array<MapEntity> 
+    private collidedIndex: number| null
+    private collidedEntity: MapEntity | null
 
     constructor(scene:Scene){
         this.scene = scene
         this.container = this.scene.add.container(0,0);
 
+        this.quickDebug = QuickDebug.getInstance();
+
         this.entityList = [];
-        this.collided = [];
+        this.collidedIndex = null;
+        this.collidedEntity = null;
     }
     
-    renderEntities( entityList:Array<MapEntity> ){
-        this.entityList = entityList;
-
-        // Render Map Objects
-        this.entityList.forEach((object)=>{
-            // Prepare Glow Container
-            let glowContainer = this.scene.add.container( object.x, object.y+this.offsetY );
-            this.container.add(glowContainer);
+    renderEntity( config: MapEntityConfig ): MapEntity | null {
+        let entity: MapEntity | null = null;
+        let mapObject: MapObject | undefined = MapObjectRepo.getMapObject( config.mapObjectKey );
             
-            // Add Glow Image to Glow Container
-            let glow = this.scene.add.sprite(0,0,object.mapObjectKey).setOrigin(0.5,1).setTintFill(0xFFFFFF);
-            glowContainer.add(glow);
+        if( mapObject == undefined ){
+            this.quickDebug.pushLog( 'MapEntities > renderEntities() > [' + config.mapObjectKey + '] not found.');
+            console.log("Map Object Not Found > " + config.mapObjectKey );
+            return null;
+        }
 
-            // Prepare Object Container
-            let objectContainer = this.scene.add.container( object.x, object.y+this.offsetY );
-            this.container.add(objectContainer);
+        if( mapObject ){
+            entity = new MapEntity(this.scene,config,mapObject);
 
-            // Add Object Image to Object Container
-            let item = this.scene.add.sprite(0,0,object.mapObjectKey).setOrigin(0.5,1);
-            objectContainer.add(item);
-            
-            object.objectContainer = objectContainer;
-            object.glowContainer = glowContainer;
+            this.container.add( entity.getContainer() );
+        }
 
-            // Resize Glow
-            let glowSize:number = 20;
-            glow.setDisplaySize( item.displayWidth + glowSize, item.displayHeight + glowSize );
-            glow.y += glowSize/2;
-            glowContainer.setVisible(false);
-
-            if( object.title ){
-                let titleContainer = this.scene.add.container( 0, item.y - 350 );
-                objectContainer.add(titleContainer);
-
-                let titlePanel = this.scene.add.nineslice( 0, 0, 'panelWhite', 0 ,400, 100, 50,50,50,50);
-                titleContainer.add(titlePanel);
-
-                let titleText = this.scene.add.text(0,0, object.title, {
-                    fontSize: '32px',
-                    fontFamily: 'Arial',
-                    color: '#000000',
-                    align: "center",
-                    wordWrap: { width: 300, useAdvancedWrap: true }
-                }).setOrigin(0.5);
-                titleContainer.add(titleText);
-                titleContainer.setVisible(false);
-                
-                object.titleContainer = titleContainer;
-            }
-            
-            // Render Collision Debug
-            if( object.showCollision && object.collisionRange > 0 ){
-                let rect = this.scene.add.rectangle( object.x,this.offsetY, object.collisionRange, 200, 0x0000ff,0.3).setOrigin(0.5,1);
-                this.container.add(rect);
-            }
-        });
+        return entity;
+    }
+    
+    getContainer(): GameObjects.Container{
+        return this.container;
     }
 
+    getEntities():Array<MapEntity> {
+        return this.entityList;
+    }
 
-    checkCollision( position:number ){
-        let collided: Array<string> = [];
+    renderEntities( entityConfigs:Array<MapEntityConfig> ){
+        let entities: Array<MapEntity> = [];
 
-        
-        this.entityList.forEach((object)=>{
-            if( object.collisionRange > 0 ){
-                let collisionStartX = object.x - (object.collisionRange/2);
-                let collisionEndX = object.x + (object.collisionRange/2);
+        // Render Map Objects
+        entityConfigs.forEach((config)=>{
+            let entity: MapEntity | null = this.renderEntity(config);
 
-                if( position > collisionStartX && position < collisionEndX ){
-                    collided.push(object.mapObjectKey);
-                    
-                    if( object.glowContainer ){
-                        object.glowContainer.setVisible(true);
-                    }
-                    if( object.titleContainer ){
-                        object.titleContainer.setVisible(true);
-                    }
-                }else{
-                    if( object.glowContainer ){
-                        object.glowContainer.setVisible(false);
-                    }
-                    if( object.titleContainer ){
-                        object.titleContainer.setVisible(false);
-                    }
+            if( entity != null ){
+                entities.push(entity);
+            }
+        });
+
+        this.entityList = entities;
+    }
+
+    checkCollision( currentX:number ){
+        let collidedIndex: number|null = null;
+        let collidedEntity: MapEntity | null = null;
+
+        this.entityList.forEach((entity:MapEntity, index)=>{
+            entity.hideGlow();
+            
+            if( entity.isCollided( currentX ) ){
+                if( collidedIndex == null ){
+                    collidedIndex = index;
+                    collidedEntity = entity;
+
+                    entity.showGlow();
                 }
             }
         });
 
-        this.collided = collided
+        if( this.collidedIndex != collidedIndex ){
+            this.collidedIndex = collidedIndex;
+            this.collidedEntity = collidedEntity;
+            
+            // Emit changed event
+            this.scene.events.emit('collision-changed',{
+                collidedEntity: this.collidedEntity
+            });
+        }
+    }
+
+    getSpawnX( spawnKey: string ):number|null{
+        let spawnX: number|null = null;
+        
+        this.entityList.forEach(( entity )=>{
+            let config: MapEntityConfig = entity.getConfig();
+            if( config.spawnKey == spawnKey && spawnX == null ){
+                spawnX = config.x;
+            }
+        })
+
+        return spawnX;
     }
 }
