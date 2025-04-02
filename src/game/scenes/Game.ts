@@ -225,7 +225,7 @@ export class Game extends Scene
         this.nextHint = this.add.text(GameLib.screenWidth - 200,GameLib.screenHeight/2 + 200,'Go',{fontSize:40,color:'black'}).setOrigin(0.5)
         this.nextButton = new SpriteButton(this, GameLib.screenWidth - 200, GameLib.screenHeight/2 + 100, 'next')
 
-        this.nextButton.onPressed(()=>{
+        this.nextButton.onPressedCallback(()=>{
             this.gameManager.nextStep();
         })
     }
