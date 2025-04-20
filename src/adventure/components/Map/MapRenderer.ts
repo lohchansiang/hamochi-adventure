@@ -6,10 +6,10 @@ import { InputMovement } from "../Player/PlayerEnum";
 import { MapLayoutRepo } from "@/adventure/repos/MapLayoutRepo";
 import { MapData, MapRepo } from "@/adventure/repos/MapRepo";
 import { QuickDebug } from "../Singleton/QuickDebug";
-import PlayerAvatar from "../Player/PlayerAvatar";
-import MapEntity from "./MapEntity";
 import { MapEndKey, MapEndSide } from "./MapEnds/Interface/MapEndInterface";
 import MapEntityConfig from "./MapEntityConfigs/MapEntityConfig";
+import AvatarRenderer from "../Avatar/AvatarRenderer";
+import { MapEntity } from "./MapEntityConfigs/MapEntity";
 
 export default class MapRenderer{
     private scene: Scene
@@ -23,6 +23,7 @@ export default class MapRenderer{
     private backOffsetY: number = -300
     private mainOffsetY: number =  50
     private frontOffsetY: number // x
+    private playerOffsetY: number = -150
     //
     private skyWidth: number = 2000
     private farWidth: number = 2000 // x
@@ -75,7 +76,7 @@ export default class MapRenderer{
         this.layerBack = this.scene.add.container(0,this.backOffsetY);
         this.layerMain = this.scene.add.container(0,this.mainOffsetY);
         this.layerObjectBack = this.scene.add.container(0,this.mainOffsetY);
-        this.layerPlayer = this.scene.add.container(0,0);
+        this.layerPlayer = this.scene.add.container(0,this.playerOffsetY);
         this.layerObjectFront = this.scene.add.container(0,this.mainOffsetY);
         this.layerFront = this.scene.add.container(0,this.frontOffsetY);
 
@@ -140,7 +141,7 @@ export default class MapRenderer{
                         entryType = 'right';
                     }
                 }else{
-                    let newSpawnX: number | null = this.backMapEntities.getSpawnX( spawnKey );
+                    let newSpawnX: number | null = this.backMapEntities.findSpawnX( spawnKey );
                     if( newSpawnX != null ){
                         spawnX = newSpawnX;
                         entryType = 'teleport';
@@ -408,7 +409,7 @@ export default class MapRenderer{
         return this.container;
     }
 
-    setPlayerAvatar( avatar: PlayerAvatar ):void{
+    setPlayerAvatar( avatar: AvatarRenderer ):void{
         this.layerPlayer.add(avatar.getContainer());
     }
 

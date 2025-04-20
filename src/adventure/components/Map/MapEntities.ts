@@ -1,8 +1,11 @@
 import { GameObjects, Scene } from "phaser";
-import { MapObject, MapObjectRepo } from "@/adventure/repos/MapObjectRepo";
+import { MapObjectTexture, MapObjectTextureRepo } from "@/adventure/repos/MapObjectTextureRepo";
 import { QuickDebug } from "../Singleton/QuickDebug";
-import MapEntity from "./MapEntity";
-import MapEntityConfig from "./MapEntityConfigs/MapEntityConfig";
+import MapEntityConfig, { MapEntityType } from "./MapEntityConfigs/MapEntityConfig";
+import { MapEntity } from "./MapEntityConfigs/MapEntity";
+import MapEntityDeco from "./MapEntityConfigs/MapEntityDeco";
+import MapEntityInteract from "./MapEntityConfigs/MapEntityInteract";
+import MapEntityNpc from "./MapEntityConfigs/MapEntityNpc";
 
 export default class MapEntities{
     /**
@@ -35,18 +38,12 @@ export default class MapEntities{
     
     renderEntity( config: MapEntityConfig ): MapEntity | null {
         let entity: MapEntity | null = null;
-        let mapObject: MapObject | undefined = MapObjectRepo.getMapObject( config.mapObjectKey );
-            
-        if( mapObject == undefined ){
-            this.quickDebug.pushLog( 'MapEntities > renderEntities() > [' + config.mapObjectKey + '] not found.');
-            console.log("Map Object Not Found > " + config.mapObjectKey );
-            return null;
-        }
-
-        if( mapObject ){
-            entity = new MapEntity(this.scene,config,mapObject);
-
-            this.container.add( entity.getContainer() );
+        if( config.type == MapEntityType.BLOCK || config.type == MapEntityType.DECO ){
+            entity = new MapEntityDeco(this.scene,config);
+        }else if( config.type == MapEntityType.INTERACT ){
+            entity = new MapEntityInteract(this.scene,config);
+        }else if( config.type == MapEntityType.NPC ){
+            entity = new MapEntityNpc(this.scene,config);
         }
 
         return entity;
@@ -67,8 +64,12 @@ export default class MapEntities{
         entityConfigs.forEach((config)=>{
             let entity: MapEntity | null = this.renderEntity(config);
 
-            if( entity != null ){
+            if( entity != null && entity.isReady ){
+                this.container.add( entity.getContainer() );
                 entities.push(entity);
+            }else{
+                this.quickDebug.pushLog( 'MapEntities > renderEntities() > [' + config.mapObjectKey + '] not found.');
+                console.log("Map Object Not Found > " + config.mapObjectKey );
             }
         });
 
@@ -80,14 +81,14 @@ export default class MapEntities{
         let collidedEntity: MapEntity | null = null;
 
         this.entityList.forEach((entity:MapEntity, index)=>{
-            entity.hideGlow();
+            entity.setActive(false);
             
             if( entity.isCollided( currentX ) ){
                 if( collidedIndex == null ){
                     collidedIndex = index;
                     collidedEntity = entity;
 
-                    entity.showGlow();
+                    entity.setActive(true);
                 }
             }
         });
@@ -103,7 +104,7 @@ export default class MapEntities{
         }
     }
 
-    getSpawnX( spawnKey: string ):number|null{
+    findSpawnX( spawnKey: string ):number|null{
         let spawnX: number|null = null;
         
         this.entityList.forEach(( entity )=>{

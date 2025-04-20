@@ -1,7 +1,7 @@
 import { Scene } from "phaser";
-import PlayerAvatar from "./PlayerAvatar";
-import { AvatarMask, AvatarState } from "./PlayerEnum";
 import { MoveDirection, MoveState } from "../Map/MapEnum";
+import AvatarRenderer from "../Avatar/AvatarRenderer";
+import { AvatarMask, AvatarState } from "../Avatar/AvatarEnum";
 
 export class AvatarMoveData{
     direction: MoveDirection
@@ -19,15 +19,18 @@ export default class PlayerController{
     }
 
     private scene: Scene
-    private avatar: PlayerAvatar
+    private avatar: AvatarRenderer
 
-    constructor(scene:Scene, avatar: PlayerAvatar){
+    constructor(scene:Scene, ){
         this.scene = scene
+    }
+
+    linkAvatar(avatar: AvatarRenderer){
         this.avatar = avatar
     }
 
     update( avatarData: AvatarMoveData ){
-        if( avatarData ){
+        if( this.avatar && avatarData ){
             if( avatarData.direction == MoveDirection.BACKWARD ){
                 this.avatar.setDirection(-1);
             }else{
@@ -48,7 +51,7 @@ export default class PlayerController{
     }
 
     enterFromSide( avatarData: AvatarMoveData, entryType: string, callback?: Function ){
-        if( avatarData ){
+        if( this.avatar &&  avatarData ){
             let distance:number = 1000;
             if( entryType == 'right' ){
                 this.avatar.setPositionX(avatarData.x + distance); 

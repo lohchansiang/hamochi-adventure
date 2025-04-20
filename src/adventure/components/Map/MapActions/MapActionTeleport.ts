@@ -1,22 +1,20 @@
 import { GameScene } from "@/adventure/scenes/GameScene"
 import { Scene } from "phaser"
-import { MapActionInterface } from "./Interface/MapActionInterface"
+import { MapActionInterface, ActionTeleportData } from "./Interface/MapActionInterface"
 
 export class MapActionTeleport implements MapActionInterface{
     label: string // Action Label
-    mapKey: string
-    spawnKey: string
+    data: ActionTeleportData
 
-    constructor( label: string, mapKey: string, spawnKey: string ){
+    constructor( label: string, data: ActionTeleportData ){
         this.label = label
-        this.mapKey = mapKey
-        this.spawnKey = spawnKey
+        this.data = data
     }
 
     run( scene: Scene ){
         if (scene instanceof GameScene) {
             scene.clean();
         }
-        scene.scene.start('GameScene',{mapKey:this.mapKey, spawnKey:this.spawnKey});
+        scene.scene.start('GameScene',{mapKey:this.data.mapKey, spawnKey:this.data.spawnKey});
     }
 }

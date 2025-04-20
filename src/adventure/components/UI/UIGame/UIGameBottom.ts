@@ -4,15 +4,17 @@ import UIActionControl from "./UIActionControl";
 import DebugButton from "@/lib/components/DebugButton";
 import GameLib from "@/lib/GameLib";
 import { InputMovement } from "../../Player/PlayerEnum";
-import MapEntity from "../../Map/MapEntity";
+import MapEntity from "../../Map/MapEntityConfigs/MapEntityDeco";
 import UIMoveSlider from "./UIMoveSlider";
+import { GameDepth } from "../../Config/GameDepth";
+import { GameScene } from "@/adventure/scenes/GameScene";
 
 export default class UIGameBottom{
     static preload( scene: Scene ){
         //
     }
 
-    private scene: Scene
+    private scene: GameScene
     private container: GameObjects.Container
     private bottomPanelBorder: GameObjects.Rectangle
     private bottomPanel: GameObjects.Rectangle
@@ -29,11 +31,11 @@ export default class UIGameBottom{
     //
     private debugText: GameObjects.Text
 
-    constructor(scene:Scene){
+    constructor(scene:GameScene){
         this.scene = scene;
 
         let panelHeight: number = 900;
-        this.container = this.scene.add.container( GameLib.midX, GameLib.screenHeight - panelHeight/2 ).setDepth(1000);
+        this.container = this.scene.add.container( GameLib.midX, GameLib.screenHeight - panelHeight/2 ).setDepth(GameDepth.UI_MAIN);
 
         // Render Bottom Panel
         this.bottomPanel = this.scene.add.rectangle( 0, 0, GameLib.screenWidth, panelHeight, GameLib.colorPanelBg ).setOrigin(0.5);

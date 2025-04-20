@@ -1,6 +1,8 @@
 import GameLib from "@/lib/GameLib";
 import { GameObjects, Scene } from "phaser";
 import { InputMovement } from "../../Player/PlayerEnum";
+import { GameScene } from "@/adventure/scenes/GameScene";
+import { GameState } from "../../Game/GameSceneManager";
 
 export default class UIMoveSlider{
     static preload( scene: Scene ){
@@ -8,7 +10,7 @@ export default class UIMoveSlider{
         scene.load.image("scrollBar", "assets/adventure/components/scrollBar.png");
     }
 
-    private scene: Scene
+    private scene: GameScene
     private container: GameObjects.Container
     //
     private trackWidth: number = 500
@@ -21,7 +23,7 @@ export default class UIMoveSlider{
     private inputMovement: InputMovement
     //
     
-    constructor(scene:Scene,x:number,y:number){
+    constructor(scene:GameScene,x:number,y:number){
         this.scene = scene;
 
         this.container = this.scene.add.container(x,y);
@@ -49,6 +51,8 @@ export default class UIMoveSlider{
 
         // Set up drag events
         this.scene.input.on('drag', (pointer: Phaser.Input.Pointer, gameObject: any, dragX: number, dragY: number) => {
+            if( this.scene.manager.gameState != GameState.PLAY ) return;
+            
             if( gameObject.name == 'UIMoveHandle' ){
                 // Lock the thumb's x position and constrain it vertically within the track bounds
                 gameObject.x = Phaser.Math.Clamp(dragX, this.fixedPoints[0], this.fixedPoints[2]);

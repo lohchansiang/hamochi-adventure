@@ -1,7 +1,6 @@
 import { EventBus } from '../EventBus';
 import { Game, GameObjects, Scene, Tweens } from 'phaser';
 import GameLib from '@/lib/GameLib';
-import PlayerAvatar from '../components/Player/PlayerAvatar';
 import ViewPosController from '../components/Map/ViewPosController';
 import { InputMovement, PlayerAttribute } from '../components/Player/PlayerEnum';
 import PlayerController from '../components/Player/PlayerController';
@@ -15,6 +14,8 @@ import GameSceneManager, { GameFlow, GameState } from '../components/Game/GameSc
 import { MapActionExit } from '../components/Map/MapActions/MapActionExit';
 import { MoveDirection } from '../components/Map/MapEnum';
 import { MapEndInterface } from '../components/Map/MapEnds/Interface/MapEndInterface';
+import DialogController from '../components/Dialog/DialogController';
+import AvatarRenderer from '../components/Avatar/AvatarRenderer';
 
 export class GameScene extends Scene
 {
@@ -28,11 +29,12 @@ export class GameScene extends Scene
     worldContainer: GameObjects.Container
     viewPosController: ViewPosController
     playerController: PlayerController
+    dialogController: DialogController
     UIBottom: UIGameBottom
     //
     map: MapRenderer
     //
-    playerAvatar: PlayerAvatar
+    playerAvatar: AvatarRenderer
     // UI
     // topUI: TopOverlayUI
     mapMini: MapMini
@@ -66,6 +68,16 @@ export class GameScene extends Scene
 
         this.manager = new GameSceneManager(this);
 
+        this.dialogController = new DialogController(this);
+        this.dialogController.onOpenCallback = ()=>{
+            this.manager.setGameState( GameState.DIALOGUE );
+        }
+
+        this.dialogController.onCloseCallback = ()=>{
+            this.manager.setGameState( GameState.PLAY );
+        }
+
+
         // Debug Panel
         const quickDebug: QuickDebug = QuickDebug.getInstance();
         quickDebug.renderDebugButton(this)
@@ -91,12 +103,13 @@ export class GameScene extends Scene
         this.worldContainer.add(this.map.getContainer());
         
         // Render Avatar
-        this.playerAvatar = new PlayerAvatar( this, 0, -150);
-        this.playerAvatar.getContainer().setScale(0.4);
+        this.playerAvatar = new AvatarRenderer( this, 0, 0);
+        this.playerAvatar.renderAvatar('CharHamochi');
         this.map.setPlayerAvatar(this.playerAvatar);
         
         this.viewPosController = new ViewPosController(this,this.worldContainer);
-        this.playerController = new PlayerController(this,this.playerAvatar);
+        this.playerController = new PlayerController(this);
+        this.playerController.linkAvatar(this.playerAvatar);
 
         this.mapMini = new MapMini(this,GameLib.midX, 100);
         this.mapMini.renderBuildings( this.map.getMapEntities(), this.map.getMapLength() );
@@ -115,7 +128,7 @@ export class GameScene extends Scene
         });
 
         EventBus.emit('current-scene-ready', this);
-
+        
         this.runFlow(GameFlow.INIT);
     }
 
@@ -177,6 +190,9 @@ export class GameScene extends Scene
                 this.loader.close();
                 this.manager.setGameState( GameState.PLAY );
                 this.UIBottom.showControl();
+
+                // Test Trigger Dialog
+                // this.dialogController.triggerDialog('dialogWelcome');
                 break;
             default:
                 break;
@@ -190,7 +206,12 @@ export class GameScene extends Scene
                 
                 console.log(mapEndObject);
 
-                let action: MapActionExit = new MapActionExit('Exit',mapEndObject.mapKey,mapEndObject.spawnKey);
+                let action: MapActionExit = new MapActionExit('Exit',
+                                                {
+                                                    mapKey: mapEndObject.mapKey,
+                                                    spawnKey: mapEndObject.spawnKey
+                                                }
+                                            );
                 action.run( this );
             }
         }

@@ -1,12 +1,14 @@
 import RectButton from '@/lib/components/RectButton';
 import { Scene } from 'phaser';
 import CloseButton from '@/lib/components/CloseButton';
-import PlayerAvatar from '../components/Player/PlayerAvatar';
 import BasicButton from '@/lib/components/BasicButton';
 import UIMoveControl from '../components/UI/UIGame/UIMoveControl';
 import { MapLayoutRepo } from '../repos/MapLayoutRepo';
-import { MapObjectRepo } from '../repos/MapObjectRepo';
+import { MapObjectTextureRepo } from '../repos/MapObjectTextureRepo';
 import UIMoveSlider from '../components/UI/UIGame/UIMoveSlider';
+import DialogController from '../components/Dialog/DialogController';
+import { AvatarTextureRepo } from '../repos/AvatarTextureRepo';
+import { AvatarMaskTextureRepo } from '../repos/AvatarMaskTextureRepo';
 
 export class Preloader extends Scene
 {
@@ -40,18 +42,20 @@ export class Preloader extends Scene
     {
         // Load For Adventures
         MapLayoutRepo.preload(this)
-        MapObjectRepo.preload(this)
+        MapObjectTextureRepo.preload(this)
+        //
+        AvatarTextureRepo.preload(this)
+        AvatarMaskTextureRepo.preload(this)
         
         UIMoveSlider.preload(this);
         UIMoveControl.preload(this);
+        DialogController.preload(this);
         
         // Load Lib Component
         RectButton.preload(this);
         BasicButton.preload(this);
         CloseButton.preload(this);
         //
-        PlayerAvatar.preload(this);
-        
         //  Load the assets for the game - Replace with your own assets
         this.load.setPath('assets');
 
@@ -92,7 +96,7 @@ export class Preloader extends Scene
     create ()
     {
         // Prepare  Anims
-        MapObjectRepo.prepareAnims(this);
+        MapObjectTextureRepo.prepareAnims(this);
 
         //  When all the assets have loaded, it's often worth creating global objects here that the rest of the game can use.
         //  For example, you can define global animations here, so we can use them in other scenes.

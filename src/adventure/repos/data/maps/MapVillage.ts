@@ -4,6 +4,9 @@ import { MapEndBarricade } from "@/adventure/components/Map/MapEnds/MapEndBarric
 import { MapActionTeleport } from "@/adventure/components/Map/MapActions/MapActionTeleport";
 import { MapEndExit } from "@/adventure/components/Map/MapEnds/MapEndExit";
 import { MapActionExit } from "@/adventure/components/Map/MapActions/MapActionExit";
+import { MEC_NpcOwl } from "@/adventure/components/Map/MapEntityConfigs/Npcs/MEC_NpcOwl";
+import { MEC_NpcKaty } from "@/adventure/components/Map/MapEntityConfigs/Npcs/MEC_NpcKaty";
+import { MEC_NpcBeary } from "@/adventure/components/Map/MapEntityConfigs/Npcs/MEC_NpcBeary";
 
 export const mapVillage: MapData =  {
         key: 'village',
@@ -18,71 +21,12 @@ export const mapVillage: MapData =  {
             'mapLayerMainGarden',
         ],
         backEntityList: [
-            new MEC_Portal(900,'Temple','temple_to_village',new MapActionTeleport('teleport','temple','temple_to_village'))
-            // {
-            //     type: 'deco',
-            //     mapObjectKey: 'baricade',
-            //     x: 450,
-            //     y: -100,
-            //     isFlip: false,
-            //     collisionRange: 0,
-            // },
-            // {
-            //     type: 'deco',
-            //     mapObjectKey: 'baricade',
-            //     x: 450,
-            //     y: 0,
-            //     isFlip: false,
-            //     collisionRange: 0,
-            // },
-            // {
-            //     type: 'building',
-            //     mapObjectKey: 'templePortal',
-            //     x: 900,
-            //     y: -150,
-            //     isFlip: false,
-            //     collisionRange: 200,
-            //     showCollision: true,
-            //     label: "Temple",
-            //     spawnKey: 'temple_to_village',
-            //     action: new MapActionTeleport('teleport','temple','village_to_temple')
-            // },
-            // {
-            //     type: 'deco',
-            //     mapObjectKey: 'signboardNext',
-            //     x: 2500,
-            //     y: -200,
-            //     isFlip: false,
-            //     collisionRange: 0,
-            // },
-            // {
-            //     type: 'deco',
-            //     mapObjectKey: 'gateBack',
-            //     x: 5000,
-            //     y: 0,
-            //     isFlip: false,
-            //     collisionRange: 0,
-            // },
-            // {
-            //     type: 'building',
-            //     mapObjectKey: 'buildingMushroom',
-            //     x: 7000,
-            //     y: -200,
-            //     isFlip: false,
-            //     collisionRange: 300,
-            //     showCollision: true,
-            //     label: "MUSHROOM HOUSE",
-            //     // action: new MapActionTeleport('Temple','temple')
-            // },
+            new MEC_Portal(900,'Temple','temple_to_village',new MapActionTeleport('teleport',{mapKey:'temple',spawnKey:'temple_to_village'})),
+            new MEC_NpcOwl(1500),
+            new MEC_NpcKaty(2000),
+            new MEC_NpcBeary(2500),
         ],
         frontEntityList: [
-            // {
-            //     type: 'deco',
-            //     mapObjectKey: 'gateFront',
-            //     x: 5000,
-            //     y: 0,
-            //     isFlip: false,
-            //     collisionRange: 0,
-            // },
+            //
         ]
     }

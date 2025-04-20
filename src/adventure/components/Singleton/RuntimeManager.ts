@@ -9,7 +9,7 @@ export default class RuntimeManager{
     private activeScene: Scene
 
     constructor(){
-
+        
     }
 
     public static getInstance(): RuntimeManager {

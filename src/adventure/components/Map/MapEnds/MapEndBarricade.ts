@@ -19,22 +19,6 @@ export class MapEndBarricade implements MapEndInterface{
 
         return [
             new MEC_Barricade(x)
-            // {
-            //     type: MapEntityType.DECO,
-            //     mapObjectKey: 'baricade',
-            //     x: x,
-            //     y: -100,
-            //     isFlip: false,
-            //     collisionRange: 0,
-            // },
-            // {
-            //     type: MapEntityType.DECO,
-            //     mapObjectKey: 'baricade',
-            //     x: x,
-            //     y: 0,
-            //     isFlip: false,
-            //     collisionRange: 0,
-            // }
         ];
     }
 }

@@ -1,6 +1,6 @@
 import GameLib from "@/lib/GameLib";
 import { GameObjects, Scene } from "phaser";
-import MapEntity from "./MapEntity";
+import { MapEntity } from "./MapEntityConfigs/MapEntity";
 
 export default class MapMini{
 
@@ -52,7 +52,7 @@ export default class MapMini{
     // Render Map Dots
     renderBuildings( entityList:Array<MapEntity>, maxLength: number  ){
         entityList.forEach( (entity)=>{
-            if( entity.isMiniMap() ){
+            if( entity.isMiniMap ){
                 let positionX:number = this.startX + (entity.getContainer().x / maxLength * this.width);
 
                 let rect: GameObjects.Rectangle = this.scene.add.rectangle(positionX,-10,20,40,0xff0000).setOrigin(0.5,1);

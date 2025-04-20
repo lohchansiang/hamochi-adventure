@@ -1,5 +1,6 @@
 import GameLib from "@/lib/GameLib";
 import { GameObjects, Scene } from "phaser";
+import { GameDepth } from "../components/Config/GameDepth";
 
 export default class  ModalLoader{
 
@@ -15,7 +16,7 @@ export default class  ModalLoader{
     constructor( scene:Scene ){
         this.scene = scene;
 
-        this.container = this.scene.add.container(GameLib.midX,GameLib.midY).setDepth(10000);
+        this.container = this.scene.add.container(GameLib.midX,GameLib.midY).setDepth(GameDepth.LOADER);
 
         this.rect = this.scene.add.rectangle(0,0,GameLib.screenWidth, GameLib.screenHeight,0x000000);
         this.container.add(this.rect);

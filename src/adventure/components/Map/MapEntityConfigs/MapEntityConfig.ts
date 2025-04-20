@@ -7,7 +7,7 @@ export default interface MapEntityConfig{
      * - Written into MapData for generate Map
      */
     type: MapEntityType // Type is not important, just as group types
-    mapObjectKey: string
+    mapObjectKey: string // mapObjectKey / CharacterKey
     x: number
     y: number
     isFlip: boolean
@@ -20,6 +20,7 @@ export default interface MapEntityConfig{
 
 export enum MapEntityType{
     DECO,
-    INTERACT, 
+    INTERACT,
+    NPC,
     BLOCK, // Block movement
 }

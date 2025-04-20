@@ -1,12 +1,14 @@
 import { GameObjects, Scene } from "phaser";
 import { InputMovement } from "../../Player/PlayerEnum";
+import { GameScene } from "@/adventure/scenes/GameScene";
+import { GameState } from "../../Game/GameSceneManager";
 
 export default class UIMoveControl{
     static preload( scene: Scene ){
         scene.load.image("arrowButton", "assets/adventure/components/arrowButton.png");
     }
 
-    private scene: Scene
+    private scene: GameScene
     private container: GameObjects.Container
     //
     private spriteLeft: GameObjects.Sprite
@@ -19,7 +21,7 @@ export default class UIMoveControl{
     //
     private activePress: Array<string> = []
 
-    constructor(scene:Scene,x:number,y:number){
+    constructor(scene:GameScene,x:number,y:number){
         this.scene = scene;
 
         this.container = this.scene.add.container(x,y);
@@ -61,7 +63,7 @@ export default class UIMoveControl{
             this.unsetRight();
         });
 
-        if( this.scene && this.scene.input && this.scene.input.keyboard){
+        if( this.scene && this.scene.input && this.scene.input.keyboard ){
             this.scene.input.keyboard.on('keydown-LEFT', () => {
                 this.setLeft();
             });
@@ -81,6 +83,8 @@ export default class UIMoveControl{
     }
 
     private setRight(){
+        if( this.scene.manager.gameState != GameState.PLAY ) return;
+
         if( !this.activePress.includes('right') ){
             this.activePress.push('right');
         }
@@ -89,6 +93,8 @@ export default class UIMoveControl{
     }
 
     private setLeft(){
+        if( this.scene.manager.gameState != GameState.PLAY ) return;
+        
         if( !this.activePress.includes('left') ){
             this.activePress.push('left');
         }

@@ -35,7 +35,6 @@ export default class GameSceneManager{
             MENU, // Shop, 
             PAUSED,
             DIALOGUE,
-            CINEMATIC
          */
         switch (gameState) {
             case GameState.PLAY:

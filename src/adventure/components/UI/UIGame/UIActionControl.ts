@@ -1,14 +1,16 @@
 import SpriteButton from "@/lib/components/SpriteButton";
 import { GameObjects, Scene } from "phaser";
-import MapEntity from "../../Map/MapEntity";
+import MapEntity from "../../Map/MapEntityConfigs/MapEntityDeco";
 import { MapActionInterface } from "../../Map/MapActions/Interface/MapActionInterface";
+import { GameScene } from "@/adventure/scenes/GameScene";
+import { GameState } from "../../Game/GameSceneManager";
 
 export default class UIActionControl{
     static preload( scene: Scene ){
         //
     }
 
-    private scene: Scene
+    private scene: GameScene
     private container: GameObjects.Container
     //
     private button: SpriteButton
@@ -17,7 +19,7 @@ export default class UIActionControl{
     private upKey!: Phaser.Input.Keyboard.Key | undefined
     private mapEntity: MapEntity | null 
 
-    constructor(scene:Scene,x:number,y:number){
+    constructor(scene:GameScene,x:number,y:number){
         this.scene = scene;
 
         this.container = this.scene.add.container(x,y);
@@ -42,10 +44,12 @@ export default class UIActionControl{
     }
 
     private runAction(){
+        if( this.scene.manager.gameState != GameState.PLAY ) return;
+        
         let action: MapActionInterface | null = this.mapEntity?.getAction() ?? null;
         
         if( action ){
-            action.run( this.scene);
+            action.run( this.scene );
         }else{
             console.log('No Action Found.');
         }

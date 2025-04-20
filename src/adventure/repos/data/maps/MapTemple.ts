@@ -28,7 +28,7 @@ export const mapTemple: MapData =  {
             new MEC_Torch(3600),
             new MEC_Torch(4800),
             new MEC_TempleDoorBack(4000),
-            new MEC_Portal(900,'Village','temple_to_village',new MapActionTeleport('teleport','village','temple_to_village'))
+            new MEC_Portal(900,'Village','temple_to_village',new MapActionTeleport('teleport',{mapKey:'village',spawnKey:'temple_to_village'}))
             // {
             //     type: 'deco',
             //     mapObjectKey: 'fence',
