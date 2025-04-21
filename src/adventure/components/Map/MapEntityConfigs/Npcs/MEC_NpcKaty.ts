@@ -17,9 +17,9 @@ export class MEC_NpcKaty implements MapEntityConfig{
         this.type = MapEntityType.NPC;
         this.mapObjectKey = 'CharKaty';
         this.x = x;
-        this.y = -150;
+        this.y = -160;
         this.isFlip = true;
-        this.collisionRange = 120;
+        this.collisionRange = 300;
         this.showCollision = true;
         // this.action = action;
     }

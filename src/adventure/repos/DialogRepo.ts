@@ -1,6 +1,7 @@
 import { PortraitEmojiKey } from "./CharacterRepo"
 import { DialogBearyHi } from "./data/dialogs/DialogBearyHi"
 import { DialogKatyHi } from "./data/dialogs/DialogKatyHi"
+import { DialogRubyHi } from "./data/dialogs/DialogRubyHi"
 import { DialogWelcome } from "./data/dialogs/DialogWelcome"
 
 export class DialogData{
@@ -23,6 +24,7 @@ export class DialogRepo
         'DialogWelcome': DialogWelcome,
         'DialogKatyHi': DialogKatyHi,
         'DialogBearyHi': DialogBearyHi,
+        'DialogRubyHi': DialogRubyHi,
     }
    
     constructor ()

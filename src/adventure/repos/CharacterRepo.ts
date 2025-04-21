@@ -2,6 +2,7 @@ import { CharBeary } from "./data/characters/CharBeary"
 import { CharHamochi } from "./data/characters/CharHamochi"
 import { CharKaty } from "./data/characters/CharKaty"
 import { CharOwl } from "./data/characters/CharOwl"
+import { CharRuby } from "./data/characters/CharRuby"
 
 export class CharacterData{
     key: string
@@ -43,6 +44,7 @@ export class CharacterRepo
         'CharHamochi': CharHamochi,
         'CharKaty': CharKaty,
         'CharBeary': CharBeary,
+        'CharRuby': CharRuby,
     }
 
     constructor ()

@@ -2,7 +2,7 @@ import { CharacterData, PortraitEmojiKey } from "../../CharacterRepo";
 
 export const CharOwl: CharacterData =  {
     key: "CharOwl",
-    name: "Own Teacher",
+    name: "Owl Teacher",
     avatar: {
         bodyBase: "owlBody",
         bodyStroke: "owlBodyStroke",
