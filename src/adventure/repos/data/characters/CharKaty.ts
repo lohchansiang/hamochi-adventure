@@ -10,11 +10,12 @@ export const CharKaty: CharacterData =  {
         eye: "defaultEye",
         eyeBlink: "defaultEyeBlink",
         hair: [
-            "empty"
+            "defaultHair"
         ],
         mouth: "catMouth",
         cheek: "defaultCheek",
         shadow: "defaultShadow",
+        hairColor: 0xFFFF00
     },
     portraits: [
         // {

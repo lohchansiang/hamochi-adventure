@@ -11,7 +11,7 @@ export const CharHamochi: CharacterData =  {
         eye: "defaultEye",
         eyeBlink: "defaultEyeBlink",
         hair: [
-            "defaultHair"
+            "hamochiHair"
         ],
         mouth: "defaultMouth",
         cheek: "defaultCheek",

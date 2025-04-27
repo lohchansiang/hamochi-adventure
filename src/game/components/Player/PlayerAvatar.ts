@@ -2,12 +2,12 @@ import { GameObjects, Scene, Tweens } from "phaser";
 
 export default class PlayerAvatar extends GameObjects.Container{
     static preload( scene: Scene ){
-        scene.load.image("avatarBase", "assets/adventure/components/avatar/CB0030_hamster.png");
-        scene.load.image("avatarBaseStroke", "assets/adventure/components/avatar/CB0030_hamster_stroke.png");
+        scene.load.image("avatarBase", "assets/adventure/components/avatar/hamster/CB0030_hamster.png");
+        scene.load.image("avatarBaseStroke", "assets/adventure/components/avatar/hamster/CB0030_hamster_stroke.png");
         scene.load.image("avatarEye0", "assets/adventure/components/avatar/CE0000_default.png");
         scene.load.image("avatarEye1", "assets/adventure/components/avatar/CE0000_default_F1.png");
         scene.load.image("avatarHair", "assets/adventure/components/avatar/CH0000_default.png");
-        scene.load.image("avatarMouth", "assets/adventure/components/avatar/CM0030_hamster.png");
+        scene.load.image("avatarMouth", "assets/adventure/components/avatar/hamster/CM0030_hamster.png");
         scene.load.image("avatarCheek", "assets/adventure/components/avatar/CC0000_default.png");
         scene.load.image("avatarShadow", "assets/adventure/components/avatar/CS0000_default.png");
         //

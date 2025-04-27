@@ -10,11 +10,12 @@ export const CharRuby: CharacterData =  {
         eye: "defaultEye",
         eyeBlink: "defaultEyeBlink",
         hair: [
-            "empty"
+            "defaultHair"
         ],
         mouth: "rabbitMouth",
         cheek: "defaultCheek",
         shadow: "defaultShadow",
+        hairColor: 0xFFFFFF
     },
     portraits: [
         // {

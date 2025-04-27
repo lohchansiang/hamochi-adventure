@@ -10,11 +10,12 @@ export const CharBeary: CharacterData =  {
         eye: "defaultEye",
         eyeBlink: "defaultEyeBlink",
         hair: [
-            "empty"
+            "defaultHair"
         ],
         mouth: "bearMouth",
         cheek: "defaultCheek",
         shadow: "defaultShadow",
+        hairColor: 0x964B00
     },
     portraits: [
         // {

@@ -34,6 +34,7 @@ export class CharacterAvatar{
     mouth: string
     cheek: string
     shadow: string
+    hairColor?: number
 }
 
 type CharacterList = Record<string, CharacterData>;

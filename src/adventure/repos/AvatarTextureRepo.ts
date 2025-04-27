@@ -57,6 +57,11 @@ export class AvatarTextureRepo
             textureType: 'image'
         },
         {
+            key: 'hamochiHair',
+            imagePath: 'hamster/CH0030_hamster.png',
+            textureType: 'image'
+        },
+        {
             key: 'owlBody',
             imagePath: 'owl/CB0050_owl_F0.png',
             textureType: 'image'

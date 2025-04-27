@@ -78,6 +78,10 @@ export default class AvatarRenderer implements AvatarInterface{
 
                 this.hair = this.scene.add.sprite(0,0,hairTexture).setOrigin(0.5,1);
                 this.avatarContainer.add(this.hair);
+
+                if( this.charData.avatar.hairColor != undefined ){
+                    this.hair.setTint(this.charData.avatar.hairColor);
+                }
             }
 
             let bodyCheekTexture: string = AvatarTextureRepo.getTextureKey(this.charData.avatar.cheek);
