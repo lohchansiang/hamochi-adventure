@@ -1,4 +1,4 @@
-import MapEntityConfig from "./IMapEntityConfig"
+import { IMapEntityConfig } from "./IMapEntityConfig"
 
 export interface IMapEnd {
     /**
@@ -9,7 +9,7 @@ export interface IMapEnd {
     key: MapEndKey
     mapKey?: string | undefined
     spawnKey?: string | undefined
-    wallConfigs( positionX: number, side: MapEndSide ): Array<MapEntityConfig>
+    wallConfigs( positionX: number, side: MapEndSide ): Array<IMapEntityConfig>
 }
 
 export enum MapEndSide{

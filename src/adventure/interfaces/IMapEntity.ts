@@ -1,6 +1,6 @@
 import { GameObjects } from "phaser";
 import { IMapAction } from "./IMapAction";
-import MapEntityConfig from "./IMapEntityConfig";
+import { IMapEntityConfig } from "./IMapEntityConfig";
 
 export interface IMapEntity {
     /**
@@ -13,5 +13,5 @@ export interface IMapEntity {
     getActions(): Array<IMapAction>
     isCollided( currentX:number ):boolean
     setActive( isActive:boolean ):void
-    getConfig():MapEntityConfig
+    getConfig():IMapEntityConfig
 }
