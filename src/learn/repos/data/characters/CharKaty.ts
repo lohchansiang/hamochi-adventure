@@ -18,12 +18,5 @@ export const CharKaty: CharacterData =  {
         shadow: "defaultShadow",
         hairColor: 0xFFFF00
     },
-    portraits: [
-        // {
-        //     key: PortraitEmojiKey.DEFAULT,
-        //     textureKey: "123",
-        //     texturePath: "132"
-        // }
-    ],
     defaultDialogKey: "DialogKatyHi"
 }

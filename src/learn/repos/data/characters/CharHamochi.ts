@@ -17,12 +17,5 @@ export const CharHamochi: CharacterData =  {
         cheek: "defaultCheek",
         shadow: "defaultShadow",
     },
-    portraits: [
-        // {
-        //     key: PortraitEmojiKey.DEFAULT,
-        //     textureKey: "123",
-        //     texturePath: "132"
-        // }
-    ],
     defaultDialogKey: null
 }

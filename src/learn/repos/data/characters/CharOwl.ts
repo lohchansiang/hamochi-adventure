@@ -17,12 +17,5 @@ export const CharOwl: CharacterData =  {
         cheek: "empty",
         shadow: "defaultShadow",
     },
-    portraits: [
-        // {
-        //     key: PortraitEmojiKey.DEFAULT,
-        //     textureKey: "123",
-        //     texturePath: "132"
-        // }
-    ],
     defaultDialogKey: "DialogWelcome"
 }

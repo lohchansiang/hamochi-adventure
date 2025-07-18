@@ -18,12 +18,5 @@ export const CharBeary: CharacterData =  {
         shadow: "defaultShadow",
         hairColor: 0x964B00
     },
-    portraits: [
-        // {
-        //     key: PortraitEmojiKey.DEFAULT,
-        //     textureKey: "123",
-        //     texturePath: "132"
-        // }
-    ],
     defaultDialogKey: "DialogBearyHi"
 }

@@ -18,12 +18,5 @@ export const CharRuby: CharacterData =  {
         shadow: "defaultShadow",
         hairColor: 0xFFFFFF
     },
-    portraits: [
-        // {
-        //     key: PortraitEmojiKey.DEFAULT,
-        //     textureKey: "123",
-        //     texturePath: "132"
-        // }
-    ],
     defaultDialogKey: "DialogRubyHi"
 }
