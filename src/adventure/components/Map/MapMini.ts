@@ -1,6 +1,6 @@
 import GameLib from "@/lib/GameLib";
 import { GameObjects, Scene } from "phaser";
-import { MapEntity } from "./MapEntityConfigs/MapEntity";
+import { IMapEntity } from "../../interfaces/IMapEntity";
 
 export default class MapMini{
 
@@ -50,7 +50,7 @@ export default class MapMini{
     }
 
     // Render Map Dots
-    renderBuildings( entityList:Array<MapEntity>, maxLength: number  ){
+    renderBuildings( entityList:Array<IMapEntity>, maxLength: number  ){
         entityList.forEach( (entity)=>{
             if( entity.isMiniMap ){
                 let positionX:number = this.startX + (entity.getContainer().x / maxLength * this.width);

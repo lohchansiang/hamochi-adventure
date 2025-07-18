@@ -13,7 +13,7 @@ import ModalLoader from '../modals/ModalLoader';
 import GameSceneManager, { GameFlow, GameState } from '../components/Game/GameSceneManager';
 import { MapActionExit } from '../components/Map/MapActions/MapActionExit';
 import { MoveDirection } from '../components/Map/MapEnum';
-import { MapEndInterface } from '../components/Map/MapEnds/Interface/MapEndInterface';
+import { IMapEnd } from '../interfaces/IMapEnd';
 import DialogController from '../components/Dialog/DialogController';
 import AvatarRenderer from '../components/Avatar/AvatarRenderer';
 
@@ -187,7 +187,6 @@ export class GameScene extends Scene
                 console.log('Player avatar entry!!!');
                 break
             case GameFlow.READY:
-                this.loader.close();
                 this.manager.setGameState( GameState.PLAY );
                 this.UIBottom.showControl();
 
@@ -199,7 +198,7 @@ export class GameScene extends Scene
         }
     }
 
-    runExit( mapEndObject:MapEndInterface ){
+    runExit( mapEndObject:IMapEnd ){
         if( mapEndObject.mapKey && mapEndObject.spawnKey ){
             if( this.manager.gameState == GameState.PLAY ){
                 this.manager.setGameState( GameState.NONE );

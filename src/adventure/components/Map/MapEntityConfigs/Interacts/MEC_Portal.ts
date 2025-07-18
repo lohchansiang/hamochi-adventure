@@ -1,7 +1,7 @@
-import { MapActionInterface } from "../../MapActions/Interface/MapActionInterface";
-import MapEntityConfig, { MapEntityType } from "../MapEntityConfig";
+import { IMapAction } from "../../../../interfaces/IMapAction";
+import { IMapEntityConfig, MapEntityType } from "../../../../interfaces/IMapEntityConfig";
 
-export class MEC_Portal implements MapEntityConfig{
+export class MEC_Portal implements IMapEntityConfig{
     type: MapEntityType;
     mapObjectKey: string;
     x: number;
@@ -11,9 +11,9 @@ export class MEC_Portal implements MapEntityConfig{
     showCollision?: boolean | undefined;
     label?: string | undefined;
     spawnKey?: string | undefined;
-    action?: MapActionInterface | undefined;
+    action?: IMapAction | undefined;
     
-    constructor( x: number, label: string, spawnKey: string, action: MapActionInterface | undefined ){
+    constructor( x: number, label: string, spawnKey: string, action: IMapAction | undefined ){
         this.type = MapEntityType.INTERACT;
         this.mapObjectKey = 'templePortal';
         this.x = x;

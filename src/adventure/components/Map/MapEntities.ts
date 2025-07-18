@@ -1,11 +1,11 @@
 import { GameObjects, Scene } from "phaser";
-import { MapObjectTexture, MapObjectTextureRepo } from "@/adventure/repos/MapObjectTextureRepo";
 import { QuickDebug } from "../Singleton/QuickDebug";
-import MapEntityConfig, { MapEntityType } from "./MapEntityConfigs/MapEntityConfig";
-import { MapEntity } from "./MapEntityConfigs/MapEntity";
+import { IMapEntityConfig, MapEntityType } from "../../interfaces/IMapEntityConfig";
+import { IMapEntity } from "../../interfaces/IMapEntity";
 import MapEntityDeco from "./MapEntityConfigs/MapEntityDeco";
 import MapEntityInteract from "./MapEntityConfigs/MapEntityInteract";
 import MapEntityNpc from "./MapEntityConfigs/MapEntityNpc";
+import MapEntityEnemy from "./MapEntityConfigs/MapEntityEnemy";
 
 export default class MapEntities{
     /**
@@ -21,9 +21,9 @@ export default class MapEntities{
     private container: GameObjects.Container
     private quickDebug: QuickDebug
     //
-    private entityList: Array<MapEntity> 
+    private entityList: Array<IMapEntity> 
     private collidedIndex: number| null
-    private collidedEntity: MapEntity | null
+    private collidedEntity: IMapEntity | null
 
     constructor(scene:Scene){
         this.scene = scene
@@ -36,14 +36,16 @@ export default class MapEntities{
         this.collidedEntity = null;
     }
     
-    renderEntity( config: MapEntityConfig ): MapEntity | null {
-        let entity: MapEntity | null = null;
+    renderEntity( config: IMapEntityConfig ): IMapEntity | null {
+        let entity: IMapEntity | null = null;
         if( config.type == MapEntityType.BLOCK || config.type == MapEntityType.DECO ){
             entity = new MapEntityDeco(this.scene,config);
         }else if( config.type == MapEntityType.INTERACT ){
             entity = new MapEntityInteract(this.scene,config);
         }else if( config.type == MapEntityType.NPC ){
             entity = new MapEntityNpc(this.scene,config);
+        }else if( config.type == MapEntityType.ENEMY ){
+            entity = new MapEntityEnemy(this.scene,config);
         }
 
         return entity;
@@ -53,16 +55,16 @@ export default class MapEntities{
         return this.container;
     }
 
-    getEntities():Array<MapEntity> {
+    getEntities():Array<IMapEntity> {
         return this.entityList;
     }
 
-    renderEntities( entityConfigs:Array<MapEntityConfig> ){
-        let entities: Array<MapEntity> = [];
+    renderEntities( entityConfigs:Array<IMapEntityConfig> ){
+        let entities: Array<IMapEntity> = [];
 
         // Render Map Objects
         entityConfigs.forEach((config)=>{
-            let entity: MapEntity | null = this.renderEntity(config);
+            let entity: IMapEntity | null = this.renderEntity(config);
 
             if( entity != null && entity.isReady ){
                 this.container.add( entity.getContainer() );
@@ -78,9 +80,9 @@ export default class MapEntities{
 
     checkCollision( currentX:number ){
         let collidedIndex: number|null = null;
-        let collidedEntity: MapEntity | null = null;
+        let collidedEntity: IMapEntity | null = null;
 
-        this.entityList.forEach((entity:MapEntity, index)=>{
+        this.entityList.forEach((entity:IMapEntity, index)=>{
             entity.setActive(false);
             
             if( entity.isCollided( currentX ) ){
@@ -108,7 +110,7 @@ export default class MapEntities{
         let spawnX: number|null = null;
         
         this.entityList.forEach(( entity )=>{
-            let config: MapEntityConfig = entity.getConfig();
+            let config: IMapEntityConfig = entity.getConfig();
             if( config.spawnKey == spawnKey && spawnX == null ){
                 spawnX = config.x;
             }

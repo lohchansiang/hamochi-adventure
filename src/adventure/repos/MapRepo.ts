@@ -1,13 +1,13 @@
-import { MapEndInterface } from "../components/Map/MapEnds/Interface/MapEndInterface"
-import MapEntityConfig from "../components/Map/MapEntityConfigs/MapEntityConfig"
+import { IMapEnd } from "../interfaces/IMapEnd"
+import MapEntityConfig from "../interfaces/IMapEntityConfig"
 import { mapTemple } from "./data/maps/MapTemple"
 import { mapVillage } from "./data/maps/MapVillage"
 
 export class MapData{
     key: string
     defaultSpawn: number // Start spawn X
-    mapStart: MapEndInterface
-    mapEnd: MapEndInterface
+    mapStart: IMapEnd
+    mapEnd: IMapEnd
     wallEndKey?: string
     layerSkyKey: string | null
     layerBackKey: string | null

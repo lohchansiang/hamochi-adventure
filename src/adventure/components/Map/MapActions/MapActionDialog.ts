@@ -1,8 +1,8 @@
 import { GameScene } from "@/adventure/scenes/GameScene"
 import { Scene } from "phaser"
-import { ActionDialogData, MapActionInterface } from "./Interface/MapActionInterface"
+import { ActionDialogData, IMapAction } from "../../../interfaces/IMapAction"
 
-export class MapActionDialog implements MapActionInterface{
+export class MapActionDialog implements IMapAction{
     label: string // Action Label
     data: ActionDialogData
 
@@ -11,10 +11,9 @@ export class MapActionDialog implements MapActionInterface{
         this.data = data
     }
 
-    run( scene: Scene ){
+    run( scene: Scene, onActionEndCallback: Function ){
         if (scene instanceof GameScene) {
-            scene.dialogController.triggerDialog(this.data.dialogKey);
+            scene.dialogController.triggerDialog(this.data.dialogKey, onActionEndCallback );
         }
-        
     }
 }

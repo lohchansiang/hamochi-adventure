@@ -1,12 +1,12 @@
 import { MapObjectTexture, MapObjectTextureRepo } from "@/adventure/repos/MapObjectTextureRepo"
 import { GameObjects, Scene } from "phaser"
-import MapEntityConfig, { MapEntityType } from "./MapEntityConfig"
-import { MapEntity } from "./MapEntity"
-import { MapActionInterface } from "../MapActions/Interface/MapActionInterface"
+import { IMapEntity } from "../../../interfaces/IMapEntity"
+import { IMapAction } from "../../../interfaces/IMapAction"
+import { IMapEntityConfig } from "@/adventure/interfaces/IMapEntityConfig"
 
-export default class MapEntityDeco implements MapEntity{
+export default class MapEntityDeco implements IMapEntity{
     private scene: Scene
-    private config: MapEntityConfig
+    private config: IMapEntityConfig
     //
     private container: GameObjects.Container
     private sprite: GameObjects.Sprite
@@ -19,7 +19,7 @@ export default class MapEntityDeco implements MapEntity{
     isReady: boolean = false
     isMiniMap: boolean = true
 
-    constructor(scene:Scene, config: MapEntityConfig){
+    constructor(scene:Scene, config: IMapEntityConfig){
         this.scene = scene;
         this.config = config;
 
@@ -88,9 +88,15 @@ export default class MapEntityDeco implements MapEntity{
     getContainer():GameObjects.Container{
         return this.container;
     }
-  
-    getAction():MapActionInterface | null{
-        return this.config.action? this.config.action: null;
+    
+    
+    getActions():Array<IMapAction>{
+        let actions: Array<IMapAction> = [];
+        if( this.config.action ){
+            actions[0] = this.config.action;
+        }
+
+        return actions;
     }
 
     isCollided( currentX:number ):boolean{
@@ -126,7 +132,7 @@ export default class MapEntityDeco implements MapEntity{
         }
     }
 
-    getConfig():MapEntityConfig{
+    getConfig():IMapEntityConfig{
         return this.config;
     }
 }

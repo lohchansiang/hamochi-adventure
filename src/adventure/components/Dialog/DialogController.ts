@@ -27,6 +27,7 @@ export default class DialogController{
     // 
     onOpenCallback: Function
     onCloseCallback: Function
+    private onDialogEndCallBack: Function | undefined
     
     constructor(scene:Scene ){
         this.scene = scene
@@ -106,7 +107,23 @@ export default class DialogController{
         this.container.setVisible(false);
     }
 
-    triggerDialog( dialogKey: string ){
+    triggerCustomDialog( dialog: DialogData, onDialogEndCallBack?: Function ){
+        this.onDialogEndCallBack = onDialogEndCallBack;
+        
+        // Set Dialog and reset
+        this.dialog = dialog;   
+        this.currentIndex = -1;
+        this.textName.setText('');
+        this.text.setText('');
+        
+        this.disableNext();
+
+        this.open();
+    }
+
+    triggerDialog( dialogKey: string, onDialogEndCallBack?: Function ){
+        this.onDialogEndCallBack = onDialogEndCallBack;
+        
         // Load DialogData from repo
         let dialog:DialogData | undefined = DialogRepo.getDialogData( dialogKey );
 
@@ -122,6 +139,7 @@ export default class DialogController{
             this.open();
         }else{
             console.log( 'Dialog Key not found > ' + dialogKey );
+            this.runOnDialogEndCallBack();
         }
     }
     
@@ -169,8 +187,17 @@ export default class DialogController{
                 this.container.setVisible(false);
 
                 if( this.onCloseCallback ) this.onCloseCallback();
+
+                this.runOnDialogEndCallBack();
             } 
         });
+    }
+
+    private runOnDialogEndCallBack(){
+        if( this.onDialogEndCallBack != undefined ){
+            this.onDialogEndCallBack();
+            this.onDialogEndCallBack = undefined;
+        }
     }
 
     nextLine(){

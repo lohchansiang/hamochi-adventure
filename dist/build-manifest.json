@@ -27,15 +27,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/adventure": [
+    "/learn": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/adventure.js"
-    ],
-    "/demo": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/demo.js"
+      "static/chunks/pages/learn.js"
     ]
   },
   "ampFirstPages": []

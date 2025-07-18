@@ -7,8 +7,8 @@ import { MapLayoutRepo } from '../repos/MapLayoutRepo';
 import { MapObjectTextureRepo } from '../repos/MapObjectTextureRepo';
 import UIMoveSlider from '../components/UI/UIGame/UIMoveSlider';
 import DialogController from '../components/Dialog/DialogController';
-import { AvatarTextureRepo } from '../repos/AvatarTextureRepo';
-import { AvatarMaskTextureRepo } from '../repos/AvatarMaskTextureRepo';
+import { MochiTextureRepo } from '../repos/MochiTextureRepo';
+import { MochiMaskTextureRepo } from '../repos/MochiMaskTextureRepo';
 
 export class Preloader extends Scene
 {
@@ -44,8 +44,8 @@ export class Preloader extends Scene
         MapLayoutRepo.preload(this)
         MapObjectTextureRepo.preload(this)
         //
-        AvatarTextureRepo.preload(this)
-        AvatarMaskTextureRepo.preload(this)
+        MochiTextureRepo.preload(this)
+        MochiMaskTextureRepo.preload(this)
         
         UIMoveSlider.preload(this);
         UIMoveControl.preload(this);

@@ -1,20 +1,20 @@
 import { GameObjects, Scene } from "phaser"
-import MapEntityConfig from "./MapEntityConfig"
-import { MapEntity } from "./MapEntity"
-import { MapActionInterface } from "../MapActions/Interface/MapActionInterface"
-import { AvatarInterface } from "../../Avatar/AvatarInterface"
+import { IMapEntity } from "../../../interfaces/IMapEntity"
+import { IMapAction } from "../../../interfaces/IMapAction"
+import { IAvatar } from "../../../interfaces/IAvatar"
 import { CharacterData, CharacterRepo } from "@/adventure/repos/CharacterRepo"
 import AvatarRenderer from "../../Avatar/AvatarRenderer"
 import { DialogData, DialogRepo } from "@/adventure/repos/DialogRepo"
 import { MapActionDialog } from "../MapActions/MapActionDialog"
+import { IMapEntityConfig } from "@/adventure/interfaces/IMapEntityConfig"
 
-export default class MapEntityNpc implements MapEntity{
+export default class MapEntityNpc implements IMapEntity{
     private scene: Scene
-    private config: MapEntityConfig
+    private config: IMapEntityConfig
     //
     private container: GameObjects.Container
     private charData: CharacterData
-    private avatar: AvatarInterface 
+    private avatar: IAvatar 
     //
     private labelContainer: GameObjects.Container
     private labelPanel: GameObjects.NineSlice
@@ -23,7 +23,7 @@ export default class MapEntityNpc implements MapEntity{
     isReady: boolean = false
     isMiniMap: boolean = true
 
-    constructor(scene:Scene, config: MapEntityConfig){
+    constructor(scene:Scene, config: IMapEntityConfig){
         this.scene = scene;
         this.config = config;
 
@@ -70,22 +70,21 @@ export default class MapEntityNpc implements MapEntity{
         }
     }
     
-
     getContainer():GameObjects.Container{
         return this.container;
     }
-  
-    getAction():MapActionInterface | null{
-        let action: MapActionInterface | null = null;
+    
+    getActions():Array<IMapAction>{
+        let actions: Array<IMapAction> = [];
         if( this.charData && this.charData.defaultDialogKey ){
             // Check Dialog key exist
             let dialogData : DialogData | undefined = DialogRepo.getDialogData( this.charData.defaultDialogKey );
             if( dialogData != undefined ){
-                action = new MapActionDialog('Talk',{ dialogKey: this.charData.defaultDialogKey }); 
+                actions[0] = new MapActionDialog('Talk',{ dialogKey: this.charData.defaultDialogKey }); 
             }
         }
 
-        return action;
+        return actions;
     }
 
     isCollided( currentX:number ):boolean{
@@ -115,7 +114,7 @@ export default class MapEntityNpc implements MapEntity{
         }
     }
 
-    getConfig():MapEntityConfig{
+    getConfig():IMapEntityConfig{
         return this.config;
     }
 }

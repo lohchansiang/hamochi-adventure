@@ -1,7 +1,7 @@
-import { MapActionInterface } from "../../MapActions/Interface/MapActionInterface";
-import MapEntityConfig, { MapEntityType } from "../MapEntityConfig";
+import { IMapAction } from "../../../../interfaces/IMapAction";
+import { IMapEntityConfig, MapEntityType } from "../../../../interfaces/IMapEntityConfig";
 
-export class MEC_TempleColumn implements MapEntityConfig{
+export class MEC_TempleColumn implements IMapEntityConfig{
     type: MapEntityType;
     mapObjectKey: string;
     x: number;
@@ -11,7 +11,7 @@ export class MEC_TempleColumn implements MapEntityConfig{
     showCollision?: boolean | undefined;
     label?: string | undefined;
     spawnKey?: string | undefined;
-    action?: MapActionInterface | undefined;
+    action?: IMapAction | undefined;
     
     constructor( x: number ){
         this.type = MapEntityType.DECO;

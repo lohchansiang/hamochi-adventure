@@ -1,14 +1,14 @@
-import MapEntityConfig, { MapEntityType } from "../MapEntityConfigs/MapEntityConfig";
-import { MapEndInterface, MapEndKey, MapEndSide } from "./Interface/MapEndInterface"
+import { IMapEntityConfig, MapEntityType } from "../../../interfaces/IMapEntityConfig";
+import { IMapEnd, MapEndKey, MapEndSide } from "../../../interfaces/IMapEnd"
 
-export class MapEndTempleWall implements MapEndInterface{
+export class MapEndTempleWall implements IMapEnd{
     key: MapEndKey
 
     constructor(){
         this.key = MapEndKey.WALL
     }
 
-    wallConfigs(positionX: number, side: MapEndSide): Array<MapEntityConfig>{
+    wallConfigs(positionX: number, side: MapEndSide): Array<IMapEntityConfig>{
         let offset: number = 125; // 
         
         let x: number = positionX - offset;

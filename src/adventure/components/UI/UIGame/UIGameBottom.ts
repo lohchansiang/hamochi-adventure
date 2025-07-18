@@ -4,10 +4,10 @@ import UIActionControl from "./UIActionControl";
 import DebugButton from "@/lib/components/DebugButton";
 import GameLib from "@/lib/GameLib";
 import { InputMovement } from "../../Player/PlayerEnum";
-import MapEntity from "../../Map/MapEntityConfigs/MapEntityDeco";
 import UIMoveSlider from "./UIMoveSlider";
 import { GameDepth } from "../../Config/GameDepth";
 import { GameScene } from "@/adventure/scenes/GameScene";
+import { IMapEntity } from "@/adventure/interfaces/IMapEntity";
 
 export default class UIGameBottom{
     static preload( scene: Scene ){
@@ -104,7 +104,7 @@ export default class UIGameBottom{
         return InputMovement.NONE;
     }
     
-    updateActionControl( entity: MapEntity| null ){
+    updateActionControl( entity: IMapEntity| null ){
         this.actionControl.updateAction(entity);
     }
 

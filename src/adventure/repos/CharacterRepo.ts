@@ -1,4 +1,5 @@
 import { CharBeary } from "./data/characters/CharBeary"
+import { CharBlackBear } from "./data/characters/CharBlackBear"
 import { CharHamochi } from "./data/characters/CharHamochi"
 import { CharKaty } from "./data/characters/CharKaty"
 import { CharOwl } from "./data/characters/CharOwl"
@@ -7,7 +8,8 @@ import { CharRuby } from "./data/characters/CharRuby"
 export class CharacterData{
     key: string
 	name: string
-    avatar: CharacterAvatar
+    avatarType: 'mochi' | 'unique'
+    avatarMochi?: MochiAvatarData
 	portraits:  Array<CharacterProtrait>
     defaultDialogKey: string | null
 }
@@ -24,7 +26,24 @@ export enum PortraitEmojiKey{
     SAD,
 }
 
-export class CharacterAvatar{
+export class UniqueAvatarData{
+
+}
+
+// export class CharacterAvatar{
+//     bodyBase: string
+//     bodyStroke: string
+//     bodyColor: number
+//     eye: string
+//     eyeBlink: string
+//     hair: Array<string>
+//     mouth: string
+//     cheek: string
+//     shadow: string
+//     hairColor?: number
+// }
+
+export class MochiAvatarData{
     bodyBase: string
     bodyStroke: string
     bodyColor: number
@@ -46,6 +65,7 @@ export class CharacterRepo
         'CharKaty': CharKaty,
         'CharBeary': CharBeary,
         'CharRuby': CharRuby,
+        'CharBlackBear': CharBlackBear,
     }
 
     constructor ()

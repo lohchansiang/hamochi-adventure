@@ -1,8 +1,8 @@
 import { GameScene } from "@/adventure/scenes/GameScene"
 import { Scene } from "phaser"
-import { MapActionInterface, ActionTeleportData } from "./Interface/MapActionInterface"
+import { IMapAction, ActionTeleportData } from "../../../interfaces/IMapAction"
 
-export class MapActionTeleport implements MapActionInterface{
+export class MapActionTeleport implements IMapAction{
     label: string // Action Label
     data: ActionTeleportData
 
@@ -11,10 +11,12 @@ export class MapActionTeleport implements MapActionInterface{
         this.data = data
     }
 
-    run( scene: Scene ){
+    run(scene: Scene, onActionEndCallback?: Function): void {
         if (scene instanceof GameScene) {
+            if( onActionEndCallback ) onActionEndCallback();
+            //
             scene.clean();
+            scene.scene.start('GameScene',{mapKey:this.data.mapKey, spawnKey:this.data.spawnKey});
         }
-        scene.scene.start('GameScene',{mapKey:this.data.mapKey, spawnKey:this.data.spawnKey});
     }
 }

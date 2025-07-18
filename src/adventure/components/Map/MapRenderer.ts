@@ -6,10 +6,10 @@ import { InputMovement } from "../Player/PlayerEnum";
 import { MapLayoutRepo } from "@/adventure/repos/MapLayoutRepo";
 import { MapData, MapRepo } from "@/adventure/repos/MapRepo";
 import { QuickDebug } from "../Singleton/QuickDebug";
-import { MapEndKey, MapEndSide } from "./MapEnds/Interface/MapEndInterface";
-import MapEntityConfig from "./MapEntityConfigs/MapEntityConfig";
-import AvatarRenderer from "../Avatar/AvatarRenderer";
-import { MapEntity } from "./MapEntityConfigs/MapEntity";
+import { MapEndKey, MapEndSide } from "../../interfaces/IMapEnd";
+import { IMapEntity } from "../../interfaces/IMapEntity";
+import { IAvatar } from "../../interfaces/IAvatar";
+import { IMapEntityConfig } from "@/adventure/interfaces/IMapEntityConfig";
 
 export default class MapRenderer{
     private scene: Scene
@@ -247,7 +247,7 @@ export default class MapRenderer{
     // calculate Map and View end
     private renderWallObject(){
         // Wall Entity Configs
-        let wallEntityConfigs: Array<MapEntityConfig> = [];
+        let wallEntityConfigs: Array<IMapEntityConfig> = [];
 
         // Prepare Map Param
         this.moveStartX = 200;
@@ -274,11 +274,11 @@ export default class MapRenderer{
         this.wallMapEntities.renderEntities( wallEntityConfigs );
     }
 
-    private renderBackObject( entityConfigs: Array<MapEntityConfig> ){
+    private renderBackObject( entityConfigs: Array<IMapEntityConfig> ){
         this.backMapEntities.renderEntities(entityConfigs);
     }
 
-    private renderFrontObject( entityConfigs: Array<MapEntityConfig> ){
+    private renderFrontObject( entityConfigs: Array<IMapEntityConfig> ){
         this.frontMapEntities.renderEntities(entityConfigs);
     }
 
@@ -409,7 +409,7 @@ export default class MapRenderer{
         return this.container;
     }
 
-    setPlayerAvatar( avatar: AvatarRenderer ):void{
+    setPlayerAvatar( avatar: IAvatar ):void{
         this.layerPlayer.add(avatar.getContainer());
     }
 
@@ -421,7 +421,7 @@ export default class MapRenderer{
         };
     }
 
-    getMapEntities(): Array<MapEntity>{
+    getMapEntities(): Array<IMapEntity>{
         return this.backMapEntities.getEntities();
     }
 

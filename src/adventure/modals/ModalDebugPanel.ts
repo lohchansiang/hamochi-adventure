@@ -2,7 +2,7 @@ import { Scene } from "phaser";
 import Panel from "../components/UI/Common/Panel"
 import GameLib from "@/lib/GameLib";
 import { QuickDebug } from "../components/Singleton/QuickDebug";
-import { ScrollView, ScrollViewConfig } from "../components/UI/Common/ScrollView";
+import { ScrollView, IScrollViewConfig } from "../components/UI/Common/ScrollView";
 
 export default class  ModalDebugPanel extends Panel{
 
@@ -16,7 +16,7 @@ export default class  ModalDebugPanel extends Panel{
     paddingSide: number = 100
     paddingBottom: number = 100
     //
-    config: ScrollViewConfig
+    config: IScrollViewConfig
     scrollView: ScrollView;
 
     constructor( scene:Scene ){

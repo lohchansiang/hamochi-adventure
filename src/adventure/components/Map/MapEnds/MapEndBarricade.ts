@@ -1,15 +1,15 @@
 import { MEC_Barricade } from "../MapEntityConfigs/Blocks/MEC_Barricade";
-import MapEntityConfig from "../MapEntityConfigs/MapEntityConfig";
-import { MapEndInterface, MapEndKey, MapEndSide } from "./Interface/MapEndInterface"
+import { IMapEnd, MapEndKey, MapEndSide } from "../../../interfaces/IMapEnd"
+import { IMapEntityConfig } from "@/adventure/interfaces/IMapEntityConfig";
 
-export class MapEndBarricade implements MapEndInterface{
+export class MapEndBarricade implements IMapEnd{
     key: MapEndKey
 
     constructor(){
         this.key = MapEndKey.WALL
     }
 
-    wallConfigs(positionX: number, side: MapEndSide): Array<MapEntityConfig>{
+    wallConfigs(positionX: number, side: MapEndSide): Array<IMapEntityConfig>{
         let offset: number = 125; // 
         
         let x: number = positionX - offset

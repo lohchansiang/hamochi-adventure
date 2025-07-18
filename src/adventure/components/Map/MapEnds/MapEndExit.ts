@@ -1,8 +1,7 @@
-import { MapActionExit } from "../MapActions/MapActionExit";
-import MapEntityConfig from "../MapEntityConfigs/MapEntityConfig";
-import { MapEndInterface, MapEndKey, MapEndSide } from "./Interface/MapEndInterface"
+import { IMapEntityConfig } from "@/adventure/interfaces/IMapEntityConfig"
+import { IMapEnd, MapEndKey, MapEndSide } from "../../../interfaces/IMapEnd"
 
-export class MapEndExit implements MapEndInterface{
+export class MapEndExit implements IMapEnd{
     key: MapEndKey
     mapKey: string | undefined
     spawnKey: string | undefined
@@ -13,7 +12,7 @@ export class MapEndExit implements MapEndInterface{
         this.spawnKey = spawnKey
     }
 
-    wallConfigs(positionX: number, side: MapEndSide): Array<MapEntityConfig>{
+    wallConfigs(positionX: number, side: MapEndSide): Array<IMapEntityConfig>{
         // Should be no wall object
         let offset: number = 125; // 
         return [

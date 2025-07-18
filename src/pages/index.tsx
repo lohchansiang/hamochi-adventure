@@ -32,6 +32,9 @@ export default function Home() {
                     <div style={{padding:15}}>
                         <Link href="/adventure">Page Adventure</Link>
                     </div>
+                    <div style={{padding:15}}>
+                        <Link href="/learn">Page Learn</Link>
+                    </div>
                 </div>
             </main>
         </>

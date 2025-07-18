@@ -1,6 +1,6 @@
 import { Scene, GameObjects } from "phaser";
 
-export interface ScrollViewConfig {
+export interface IScrollViewConfig {
     x: number;
     y: number;
     maskX?: number; // Required if put in container
@@ -28,7 +28,7 @@ export class ScrollView {
     private isDragging: boolean = false;
     private dragStartY: number = 0;
 
-    constructor(scene: Scene, config: ScrollViewConfig) {
+    constructor(scene: Scene, config: IScrollViewConfig) {
         this.scene = scene;
         this.viewWidth = config.width;
         this.viewHeight = config.height;
