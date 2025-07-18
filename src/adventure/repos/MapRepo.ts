@@ -1,5 +1,5 @@
 import { IMapEnd } from "../interfaces/IMapEnd"
-import MapEntityConfig from "../interfaces/IMapEntityConfig"
+import { IMapEntityConfig } from "../interfaces/IMapEntityConfig"
 import { mapTemple } from "./data/maps/MapTemple"
 import { mapVillage } from "./data/maps/MapVillage"
 
@@ -12,8 +12,8 @@ export class MapData{
     layerSkyKey: string | null
     layerBackKey: string | null
     layerMainKeys: Array<string>
-    backEntityList: Array<MapEntityConfig> 
-    frontEntityList: Array<MapEntityConfig> 
+    backEntityList: Array<IMapEntityConfig> 
+    frontEntityList: Array<IMapEntityConfig> 
     
 }
 

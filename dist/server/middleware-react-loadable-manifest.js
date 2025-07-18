@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST="{\"pages/index.tsx -> @/App\":{\"id\":\"pages/index.tsx -> @/App\",\"files\":[\"static/chunks/src_App_tsx.js\"]},\"pages/learn/index.tsx -> @/AppLearn\":{\"id\":\"pages/learn/index.tsx -> @/AppLearn\",\"files\":[\"static/chunks/src_AppLearn_tsx.js\"]}}"
+self.__REACT_LOADABLE_MANIFEST="{\"pages/learn/index.tsx -> @/AppLearn\":{\"id\":\"pages/learn/index.tsx -> @/AppLearn\",\"files\":[\"static/chunks/src_AppLearn_tsx.js\"]}}"
