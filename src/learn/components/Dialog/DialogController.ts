@@ -1,10 +1,18 @@
 import GameLib from "@/lib/GameLib";
 import { GameObjects, Scene } from "phaser"
 import { GameDepth } from "../Config/GameDepth";
-import { Vector } from "matter";
 import { GameText } from "../Config/GameText";
-import { DialogData } from "@/learn/repos/data/DialogData";
+import { DialogData, DialogLine } from "@/learn/repos/data/DialogData";
 
+/* Dialog Controller
+* - Function: start dialog
+* - Function: next line
+* - Function: pause 
+* - Function: continue
+* - Function: callback On Delay (timer to run function)
+* -- to trigger effect upon delay 
+* - Function: callback On finish line
+*/
 export default class DialogController{
     static preload( scene: Scene ){
 
@@ -30,7 +38,7 @@ export default class DialogController{
         return 'Audio_'+dialogKey+'_'+sequenceKey;
     }
 
-    private canSkip: boolean = false;
+    private canSkip: boolean = true;
     private scene: Scene
     private container: GameObjects.Container
     private backdrop: GameObjects.Rectangle
@@ -39,19 +47,18 @@ export default class DialogController{
     private spriteNextIcon: GameObjects.Sprite
     private text: GameObjects.Text
     //
-    private bottomY: number = GameLib.midY
-    //
     private dialog: DialogData
     private currentIndex: number
     private canNext:boolean
     // 
     onOpenCallback: Function
     onCloseCallback: Function
-    onDelayCallback: (delay:number,key:string) => void
-    onDialogEndCallBack?: (endKey:string) => void
+    onLineDelayCallback: (dialogKey:string,sequenceKey:string,delay:number,key:string) => void
+    onLineEndCallback: (dialogKey:string,sequenceKey:string,key?:string) => void
+    onDialogEndCallBack?: (dialogKey:string) => void
     //
     private soundPlayer: Phaser.Sound.BaseSound
-    private delayedCallbacks: Array<Phaser.Time.TimerEvent> = []
+    private lineDelayedCallbacks: Array<Phaser.Time.TimerEvent> = []
     
     constructor(scene:Scene ){
         this.scene = scene
@@ -105,25 +112,12 @@ export default class DialogController{
         this.backdrop.setInteractive();
         this.backdrop.on('pointerup',()=>{
             if( this.canNext ){
-                this.nextLine();
+                this.endLine();
             }
         },this);
 
         this.container.setVisible(false);
     }
-
-    // triggerCustomDialog( dialog: DialogData, onDialogEndCallBack?: Function ){
-    //     this.onDialogEndCallBack = onDialogEndCallBack;
-        
-    //     // Set Dialog and reset
-    //     this.dialog = dialog;   
-    //     this.currentIndex = -1;
-    //     this.text.setText('');
-        
-    //     this.disableNext();
-
-    //     this.open();
-    // }
 
     triggerDialog( dialogData: DialogData ){
         if( dialogData ){
@@ -144,11 +138,13 @@ export default class DialogController{
     private disableNext(){
         this.canNext = false;
         this.spriteNextIcon.setVisible(false);
+        this.backdrop.setVisible(false);
     }
 
     private enableNext(){
         this.canNext = true;
         this.spriteNextIcon.setVisible(true);
+        this.backdrop.setVisible(true);
     }
 
     private open(){
@@ -161,6 +157,7 @@ export default class DialogController{
     }
 
     private close(){
+        console.log('Close Dialog');
         this.container.setVisible(false);
         if( this.onCloseCallback ) this.onCloseCallback();
         this.runOnDialogEndCallBack();
@@ -169,61 +166,125 @@ export default class DialogController{
 
     private runOnDialogEndCallBack(){
         if( this.onDialogEndCallBack != undefined ){
-            this.onDialogEndCallBack(this.dialog.endKey);
-            this.onDialogEndCallBack = undefined;
+            this.onDialogEndCallBack(this.dialog.key);
         }
     }
 
-    nextLine(){
+    private runOnLineEndCallback( line: DialogLine ){
+        // Call set onLineEndCallback
+        if( this.onLineEndCallback != undefined ){
+            this.onLineEndCallback( this.dialog.key, line.sequenceKey, line.lineEndKey );
+        }
+    }
+
+    private endLine(){
         this.disableNext();
+
         // Stop sound
-        if( this.soundPlayer ){
+        if( this.soundPlayer.isPlaying ){
             this.soundPlayer.stop();
         }
         // Stop call back?
-        if( this.delayedCallbacks && this.delayedCallbacks.length > 0 ){
-            this.delayedCallbacks.forEach((delay) => {
+        if( this.lineDelayedCallbacks && this.lineDelayedCallbacks.length > 0 ){
+            this.lineDelayedCallbacks.forEach((delay) => {
                 delay.remove();
             })
         }
 
+        let line:DialogLine = this.dialog.lines[this.currentIndex];
+        this.runOnLineEndCallback( line );
+
+        let isPaused: boolean = line.isPaused?? false;
+        if( !isPaused ){
+            this.nextLine();
+        }
+    }
+
+    private findLineIndex( sequenceKey: string ){
+        let index:number = -1;
+        this.dialog.lines.forEach( (d,i) => {
+            if( d.sequenceKey == sequenceKey ){
+                index = i;
+            }
+        });
+
+        return index;
+    }
+
+    nextLine( nextSequenceKey?:string, delay?: number ){
+        this.disableNext();
+
+        if( delay ){
+            this.scene.time.delayedCall( delay, this.nextLine, [nextSequenceKey], this);
+            return;
+        }
+        
+        let isOverwrite:boolean = false;
+        if( !nextSequenceKey ){
+            if(  this.currentIndex > -1 && this.dialog.lines[this.currentIndex].nextSequenceKey != undefined ){
+                nextSequenceKey = this.dialog.lines[this.currentIndex].nextSequenceKey;
+            }
+        }
+
+        if( nextSequenceKey ){
+            let lineIndex = this.findLineIndex(nextSequenceKey);
+            if( lineIndex > -1 ){
+                this.currentIndex = lineIndex;
+                isOverwrite = true;
+            }
+        }
+
         // render Line
-        this.currentIndex += 1;
+        if( !isOverwrite ){
+            this.currentIndex += 1;
+        }
 
         if( this.dialog ){
             if( this.currentIndex < this.dialog.lines.length ){
-                this.text.setText(this.dialog.lines[this.currentIndex].message);
+                const line: DialogLine = this.dialog.lines[this.currentIndex];
+
+                this.text.setText( line.message );
                 
-                let sequenceKey: string = this.dialog.lines[this.currentIndex].sequenceKey;
+                // Setup delayed callback
+                if( this.onLineDelayCallback ){
+                    line.delayCallbacks?.forEach(( delayCallback )=>{
+                        let delayCall: Phaser.Time.TimerEvent = this.scene.time.delayedCall(
+                                                                    delayCallback.delay, 
+                                                                    this.onLineDelayCallback,
+                                                                    [
+                                                                        this.dialog.key,
+                                                                        line.sequenceKey,
+                                                                        delayCallback.delay,
+                                                                        delayCallback.key
+                                                                    ],
+                                                                    this);
+                        this.lineDelayedCallbacks.push(delayCall);
+                    });
+                }
 
                 // Check Sound
-                let audioKey: string =  DialogController.audioKey( this.dialog.key, sequenceKey);
+                // If have audio then play, if audio is played, line end when
+                let audioKey: string =  DialogController.audioKey( this.dialog.key, line.sequenceKey);
+                let hasAudio: boolean = false;
                 if (this.scene.cache.audio.exists(audioKey)) {
                     this.soundPlayer = this.scene.sound.add( audioKey);
                     this.soundPlayer.play();
 
                     if( this.soundPlayer.isPlaying ){
+                        hasAudio = true;
                         this.soundPlayer.on('complete', () => {
-                            console.log('Audio finished playing > ' +sequenceKey);
                             this.enableNext();
                         });
                     }
-                    
                 }
 
-                if( this.onDelayCallback ){
-                    this.dialog.lines[this.currentIndex].delayCallbacks?.forEach(( delayCallback )=>{
-                        let delayCall: Phaser.Time.TimerEvent = this.scene.time.delayedCall(delayCallback.delay, this.onDelayCallback,[delayCallback.delay,delayCallback.key],this);
-                        this.delayedCallbacks.push(delayCall);
-                    });
-                }
-
-                if( this.canSkip ){
+                // If no audio played, or can skip option is enabled
+                // Able to next line with delayed time
+                if( this.canSkip || !hasAudio ){
                     this.scene.time.delayedCall(300,()=>{
                         this.enableNext();
                     });
                 }
-                
             }else{
                 this.close();
             }
